@@ -1,0 +1,7 @@
+<h1>{{ user.pseudo }} <span class="small">  </span> {{ user.password }}</h1>
+
+<p class="infos">Avec l'email {{ user.email }}, inscrit le {{ user.dateInscription|date:"DATE_FORMAT" }}</p>
+
+<div class="contenu">{{ user.profil|linebreaks }}</div>
+
+<p><a href="{% url 'accueil' %}">Retour en arrière</a></p>
