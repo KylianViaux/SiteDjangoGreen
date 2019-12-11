@@ -1,0 +1,46 @@
+version: "2"
+
+services:
+
+  portainer:
+    image: portainer/portainer
+    container_name: "portainer"
+    command: -H unix:///var/run/docker.sock
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  mysql:
+    image: mysql/mysql-server
+    container_name: "mysql_database"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=itsasecret
+
+
+
+  django:
+    image: docker_tutorial_django
+    container_name: "django_server"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+       - .:/code
+    stdin_open: true
+    command: python manage.py runserver 0.0.0.0:8000
+    tty: true
+    links:
+      - mysql
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=mysql://root:itsasecret@db:8080/monblog
+
+volumes:
+    db_data: {} 
+
