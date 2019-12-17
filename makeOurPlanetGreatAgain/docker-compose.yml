@@ -14,23 +14,26 @@ services:
   mysql:
     image: mysql/mysql-server
     container_name: "mysql_database"
+    command: --default-authentication-plugin=mysql_native_password
     ports:
       - "8080:8080"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=monblog
+      - MYSQL_USER=root
     volumes:
       - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
-    environment:
-      - MYSQL_ROOT_PASSWORD=itsasecret
-
 
 
   django:
-    image: docker_tutorial_django
+    image: django_server
     container_name: "django_server"
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-       - .:/code
+       - .:/mopga
     stdin_open: true
     command: python manage.py runserver 0.0.0.0:8000
     tty: true
@@ -39,8 +42,4 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=mysql://root:itsasecret@db:8080/monblog
-
-volumes:
-    db_data: {} 
-
+      - DATABASE_URL=mysql://root:password@mysql:3306/monblog
