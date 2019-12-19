@@ -1,4 +1,4 @@
-version: "2"
+version: "2.0"
 
 services:
 
@@ -6,6 +6,7 @@ services:
     image: portainer/portainer
     container_name: "portainer"
     command: -H unix:///var/run/docker.sock
+    restart: always
     ports:
       - 9000:9000
     volumes:
@@ -16,30 +17,29 @@ services:
     container_name: "mysql_database"
     command: --default-authentication-plugin=mysql_native_password
     ports:
-      - "8080:8080"
+      - 8080:3306
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_PASSWORD=password
       - MYSQL_DATABASE=monblog
       - MYSQL_USER=root
     volumes:
-      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
-
+      - ./Databases/dump.sql:/docker-entrypoint-initdb.d/dump.sql
 
   django:
     image: django_server
     container_name: "django_server"
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-       - .:/mopga
     stdin_open: true
-    command: python manage.py runserver 0.0.0.0:8000
     tty: true
-    links:
+    depends_on:
       - mysql
-    ports:
-      - "8000:8000"
     environment:
       - DATABASE_URL=mysql://root:password@mysql:3306/monblog
+    volumes:
+      - ./makeOurPlanetGreatAgain:/mopga
