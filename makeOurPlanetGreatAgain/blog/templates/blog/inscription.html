@@ -1,26 +1,48 @@
-<h1>Bienvenue sur le blog des crêpes bretonnes et de l'inscription!</h1>
+<!doctype html>
 
+<html lang="fr">
 
+  <head>
+    <title>Inscription</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    {% load crispy_forms_tags %}
+    {% load bootstrap4 %}
+    {% load static %}
+  </head>
 
+  <body style="background-image: url({% static 'images/cover2.jpg' %}); background-repeat: no-repeat; background-size: cover">
+    <div class="form-container container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1 class="form__section-title text-warning">C'est facile et rapide</h1>
+        </div>
+        <div class="col-md-12">
+          {% bootstrap_messages %}
 
-{% if submitted %}
-  <p class="success">
-    Your message was submitted successfully. Thank you.
-  </p>
+            {% if submitted %}
+              <p class="success">
+                 <p><a href="{% url 'accueil' %}">Inscription réussie, retour à l'acceuil</a></p>
+              </p>
 
-{% else %}
-  <form action="" method="post" novalidate>
-  <table>
-    {{ form.as_table }}
-    <tr>
-      <td>&nbsp;</td>
-      <td><input type="submit" value="Submit"></td>
-    </tr>
-  </table>
-  {% csrf_token %}
-  </form>
-{% endif %}
-
+            {% else %}
+              <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="row">
+                  <div class="col-12 text-center">
+                    {% buttons %}
+                    <button type="submit" class="form-button btn btn-success">Submit</button>
+                    {% endbuttons %}
+                    <p><a href="{% url 'confirmation' %}">Validation 2</a></p>
+                  </div>
+                </div>
+              </form>
+            {% endif %}
+           </div>
+        </div>
+    </div>
+  </body>
+</html>
 
 
 <!--
@@ -51,5 +73,3 @@
 	  <button type="submit" class="btn btn-success">Validation</button>
 </form>
 -->
-
-<p><a href="{% url 'confirmation' %}">Validation 2</a></p>
