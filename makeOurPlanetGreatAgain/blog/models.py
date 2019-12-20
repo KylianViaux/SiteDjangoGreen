@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django import forms
 
 # Create your models here.
 # https://docs.djangoproject.com/en/3.0/ref/models/fields/
@@ -19,6 +20,15 @@ class User(models.Model):
     
     def __str__(self):
         return self.pseudo
+
+class UserForm(forms.Form):
+	pseudo = forms.CharField(max_length=30, label='Pseudo')
+	slug = forms.SlugField(max_length=100, label='Slug')
+	password = forms.CharField(max_length=40, label='Password')
+	confirmationPassword = forms.CharField(max_length=40, label='Confirmation Password')
+	email = forms.EmailField(label='Email')
+	profil = forms.CharField(required=False, widget=forms.Textarea, label='Profil')
+
 
 class Membre(models.Model):
     groupe = models.ForeignKey('Project', on_delete=models.CASCADE)

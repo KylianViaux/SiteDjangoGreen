@@ -1,6 +1,32 @@
 <h1>Bienvenue sur le blog des crêpes bretonnes et de l'inscription!</h1>
 
+
+
+
+{% if submitted %}
+  <p class="success">
+    Your message was submitted successfully. Thank you.
+  </p>
+
+{% else %}
+  <form action="" method="post" novalidate>
+  <table>
+    {{ form.as_table }}
+    <tr>
+      <td>&nbsp;</td>
+      <td><input type="submit" value="Submit"></td>
+    </tr>
+  </table>
+  {% csrf_token %}
+  </form>
+{% endif %}
+
+
+
+<!--
 <form action="{% url 'inscription' %}" method="POST">
+	{% csrf_token %}
+	    
 	<div>
 		<label>Pseudo</label>
 		<input id="pseudo" name="pseudo">
@@ -21,7 +47,9 @@
 		<label>Profil</label>
 		<input id="profil" name="profil">
 	</div>
+	
+	  <button type="submit" class="btn btn-success">Validation</button>
 </form>
+-->
 
-
-<p><a href="{% url 'confirmation' %}">Validation</a></p>
+<p><a href="{% url 'confirmation' %}">Validation 2</a></p>
