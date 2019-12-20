@@ -14,6 +14,14 @@ def lire(request, id, slug):
     return render(request, 'blog/lire.html', {'user':user})
 
 
+def inscription(request):
+  	return render(request, 'blog/inscription.html')
+
+
+def confirmation(request):
+    return render(request, 'blog/confirmation.html')
+
+
 class PersonCreateView(CreateView):
     model = User
     fields = ('name', 'password', 'email', 'profil')
