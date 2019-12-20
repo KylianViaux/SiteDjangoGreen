@@ -1,0 +1,27 @@
+<h1>Bienvenue sur le blog des crêpes bretonnes et de l'inscription!</h1>
+
+<form action="{% url 'inscription' %}" method="POST">
+	<div>
+		<label>Pseudo</label>
+		<input id="pseudo" name="pseudo">
+	</div>
+	<div>
+		<label>Password</label>
+		<input id="password" name="password">
+	</div>
+	<div>
+		<label>ConfirmationPassword</label>
+		<input id="confirmationPassword" name="confirmationPassword">
+	</div>
+	<div>
+		<label>Email</label>
+		<input id="email" name="email">
+	</div>
+	<div>
+		<label>Profil</label>
+		<input id="profil" name="profil">
+	</div>
+</form>
+
+
+<p><a href="{% url 'confirmation' %}">Validation</a></p>
