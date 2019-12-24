@@ -12,6 +12,7 @@ class User(models.Model):
     email = models.CharField(max_length=50)
     profil = models.TextField(null=True)
     dateInscription = models.DateTimeField(default=timezone.now, verbose_name="Date d'inscription")
+    isExpert = models.BooleanField(default=False)
     karma = models.IntegerField(default=0)
     
     class Meta:
@@ -27,7 +28,13 @@ class UserForm(forms.Form):
 	password = forms.CharField(max_length=40, label='Password')
 	confirmationPassword = forms.CharField(max_length=40, label='Confirmation Password')
 	email = forms.EmailField(label='Email')
+	isExpert = forms.BooleanField(label='**Je suis un expert',required=False)
 	profil = forms.CharField(required=False, widget=forms.Textarea, label='Profil')
+
+
+class ConnexionForm(forms.Form):
+    pseudo = forms.CharField(max_length=30, label='Pseudo')
+    password = forms.CharField(max_length=40, label='Password', widget=forms.PasswordInput)
 
 
 class Membre(models.Model):
@@ -64,12 +71,22 @@ class Project(models.Model):
     listeImage = models.ManyToManyField(Image,through='EstLiee',through_fields=('projet', 'image'))
     datePublication = models.DateTimeField(default=timezone.now,verbose_name="Date de publication")
 
+    def __str__(self):
+        return self.nom
+
     class Meta:
         verbose_name = "Projet"
         ordering = ['datePublication']
+        permissions = (
+            ("evaluate_project", "Evaluer un projet"),
+        )
 
-    def __str__(self):
-        return self.nom
+
+
+class ProjectForm(forms.Form):
+	nom = forms.CharField(max_length=30, label='Name')
+	budgetCible = forms.IntegerField(label='Targeted budget',min_value=10)
+	description = forms.CharField(required=False, widget=forms.Textarea, label='description')
 
 #------------------------------------------------------------------------------------------------------------
 

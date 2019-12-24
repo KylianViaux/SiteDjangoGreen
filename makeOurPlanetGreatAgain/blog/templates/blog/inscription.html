@@ -14,7 +14,7 @@
     <div class="form-container container">
       <div class="row">
         <div class="col-md-12">
-          <h1 class="form__section-title text-warning">C'est facile et rapide</h1>
+          <h1 class="form__section-title text-warning">Inscription</h1>
         </div>
         <div class="col-md-12">
           {% bootstrap_messages %}
@@ -33,6 +33,7 @@
                     {% buttons %}
                     <button type="submit" class="form-button btn btn-success">Submit</button>
                     {% endbuttons %}
+                    <p>** Un expert est un personne capable d'evaluer un projet, merci de ne cocher cette case que si c'est le cas</p>
                     <p><a href="{% url 'confirmation' %}">Validation 2</a></p>
                   </div>
                 </div>
