@@ -1,0 +1,12 @@
+<h1>{{ project.nom }}</h1>
+<p> {{ project.description }}</p>
+<p> {{ project.budgetActuel }}</p>
+<p> {{ project.budgetCible }}</p>
+
+Donate
+<p><a href="{% url 'donate' id=project.id contribution=10  %}">10</a></p>
+<p><a href="{% url 'donate' id=project.id contribution=25 %}">25</a></p>
+<p><a href="{% url 'donate' id=project.id contribution=50 %}">50</a></p>
+<!-- voir pour ajouter un formulaire avec "autre montant" -->
+
+<p><a href="{% url 'accueil' %}">Retour en arrière</a></p>

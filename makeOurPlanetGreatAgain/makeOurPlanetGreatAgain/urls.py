@@ -21,7 +21,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accueil', views.home, name='accueil'),
     path('user/<int:id>-<slug:slug>', views.lire, name='lire'),
+    path('projectId/<int:id>', views.voirProjet, name='projectId'),
     path('inscription', views.inscription, name='inscription'),
+    path('donate/<int:id>-<int:contribution>', views.donate, name='donate'),
     path('createProject', views.createProject, name='createProject'),
     path('deconnexion', views.deconnexion, name='deconnexion'),
     path('confirmation', views.confirmation, name='confirmation')

@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from blog.models import User, Project, UserForm, ProjectForm, ConnexionForm
+from blog.models import User, Project, UserForm, ProjectForm, ConnexionForm, InvestorLink
 from django.views.generic import CreateView
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
@@ -26,7 +26,7 @@ def home(request):
             pseudo=request.POST.get('pseudo')
             password=request.POST.get('password')
             user = authenticate(username=pseudo, password= password)
-            if user :
+            if user is not None:
                 connexion="true"
                 login(request, user)
             else:
@@ -54,6 +54,27 @@ def deconnexion(request):
 def lire(request, id, slug):
     user = get_object_or_404(User, id=id, slug=slug)
     return render(request, 'blog/lire.html', {'user':user})
+
+
+def voirProjet(request, id):
+    project = get_object_or_404(Project, id=id)
+    return render(request, 'blog/lireProjet.html', { 'project':project })
+
+
+@login_required(redirect_field_name='redirect_to')
+def donate(request, id, contribution):
+    #logger.error("projectId {}".format(id))
+    current_user = request.user
+    project = get_object_or_404(Project, id=id)
+    #ajout du lien entre le projet et le donateur
+    """ donation = InvestorLink.objects.create(
+        idProject=project,
+        idInvestisseur=current_user,
+        contribution=contribution
+    ) """
+    project.budgetActuel += contribution
+    project.save()
+    return voirProjet(request, id)
 
 
 def inscription(request):

@@ -1,7 +1,6 @@
 <h1>Connexion</h1>
 {% if connexion == 'true' %}
     <p>connexion reussie</p>
-    <p>Welcome {{ user.pseudo }}</p>
     {% if perms.blog.evaluate_project %}
         <p><a href="{% url 'deconnexion' %}">Evaluer un projet</a></p>
     {% endif %}
@@ -37,9 +36,10 @@
 <h1>liste des derniers project</h1>
 {% for project in derniers_project %}
 <div class="project">
-
-    <h3>{{ project.nom }}</h3>
-    <p>{{  project.description }}</p>
+    <h3><a href="{% url 'projectId' id=project.id %}"> {{ project.nom }} </a></h3>
+    <p> {{ project.description }}</p>
+    <p> Budget requis {{ project.budgetCible }}</p>
+    <p> Budget actuel {{ project.budgetActuel }}</p>
 </div>
 {% empty %}
 <p>Aucun projet.</p>
