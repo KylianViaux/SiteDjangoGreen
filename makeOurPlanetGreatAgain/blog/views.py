@@ -1,10 +1,11 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
-from blog.models import User, Project, UserForm, ProjectForm, ConnexionForm, InvestorLink
+from blog.models import User, Project, UserForm, ProjectForm, ExpertForm, ExpertNote, ConnexionForm, InvestorLink
 from django.views.generic import CreateView
-from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail, get_connection
+from django.db.models import Avg
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.hashers import make_password
 
@@ -18,18 +19,31 @@ logger = logging.getLogger(__name__)
 
 # Fonction de la page d'accueil
 def home(request):
-    connexion = "null"
+
+    # Récupération de l'utilisateur connecté si il y en a un et vérification si c'est un expert
+    if request.user.is_authenticated:
+        connexion = "true"
+        user = request.user
+        if user.isExpert:
+            isExpert = True
+        else:
+            isExpert = False
+    else:
+        connexion = "null"
+        user = False
+        isExpert = False
 
     # Formulaire de connexion
     if request.method == 'POST':
         form = ConnexionForm(request.POST)
         if form.is_valid():
-            cd = form.cleaned_data
             username=request.POST.get('username')
             password=request.POST.get('password')
-            user = authenticate(username=username, password= password)
+            user = authenticate(username=username, password=password)
             if user is not None:
                 connexion="true"
+                if user.isExpert:
+                    isExpert = True
                 login(request, user)
             else:
                 connexion="false"
@@ -43,7 +57,7 @@ def home(request):
     project = Project.objects.all()
 
 	# Render
-    return render(request, 'blog/accueil.html', {'form' : form, 'derniers_users' : users, 'derniers_project' : project, 'connexion' : connexion })
+    return render(request, 'blog/accueil.html', {'form':form, 'derniers_users':users, 'user':user, 'derniers_project':project, 'connexion':connexion, 'isExpert':isExpert})
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -64,8 +78,34 @@ def voirUtilisateur(request, id, slug):
 
 # Retourne tous les projets existants
 def voirProjet(request, id):
+
     project = get_object_or_404(Project, id=id)
-    return render(request, 'blog/voirProjet.html', { 'project':project })
+    form = ""
+
+    # Récupération de toutes les notes que le projet a recu
+    object = ExpertNote.objects.filter(idProject=project.id)
+    avg_noteBudget = object.aggregate(Avg('noteBudget')).get('noteBudget__avg')
+    avg_noteFaisabilite = object.aggregate(Avg('noteFaisabilite')).get('noteFaisabilite__avg')
+    avg_noteUtilite = object.aggregate(Avg('noteUtilite')).get('noteUtilite__avg')
+
+    # Si la personne connectée est un expert permet formulaire permettant de noter un projet
+    if request.user.isExpert:
+        if request.method == 'POST':
+                form = ExpertForm(request.POST)
+                if form.is_valid():
+                    current_user = request.user
+                    note = ExpertNote.objects.create(
+                       idExpert=current_user,
+                       idProject=project,
+                       noteBudget=request.POST.get('noteBudget'),
+                       noteFaisabilite=request.POST.get('noteFaisabilite'),
+                       noteUtilite=request.POST.get('noteUtilite'),
+                       commentaire=request.POST.get('commentaire'),
+                    )
+        else:
+            form = ExpertForm()
+
+    return render(request, 'blog/voirProjet.html', { 'project':project, 'user':request.user, 'form':form, 'avg_noteBudget':avg_noteBudget, 'avg_noteFaisabilite':avg_noteFaisabilite,  'avg_noteUtilite':avg_noteUtilite})
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -110,11 +150,10 @@ def inscription(request):
 			password = make_password(request.POST.get('password'))
 			email=request.POST.get('email')
 			profil=request.POST.get('profil')
-			if(request.POST.get('isExpert') == 'On'):
+			if(request.POST.get('isExpert') == 'on'):
 			    expert = True
 			else:
 			    expert = False
-
 			user = User.objects.create(
 				username=username,
 				slug=username,
@@ -174,9 +213,11 @@ def confirmation(request):
 
 # Permet à un utilisateur connecté qui est expert de noter un project
 @login_required(redirect_field_name='redirect_to')
-@permission_required('blog.evaluate_project')
-def evaluateProject(request, project):
-    return render(request, 'blog/confirmation.html')
+def evaluateProject(request, id):
+    if request.user.isExpert:
+        logger.error("expert")
+    else:
+        return home(request)
 
 #--------------------------------------------------------------------------------------------------------------------------
 

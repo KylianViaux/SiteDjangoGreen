@@ -9,4 +9,18 @@ Donate
 <p><a href="{% url 'donate' id=project.id contribution=50 %}">50</a></p>
 <!-- voir pour ajouter un formulaire avec "autre montant" -->
 
+
+<p>moyenne budget : {{ avg_noteBudget }}/10</p>
+<p>moyenne faisabilite : {{ avg_noteFaisabilite }}/10</p>
+<p>moyenne utilite : {{ avg_noteUtilite }}/10 </p>
+
+
+{% if user.isExpert %}
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="form-button btn btn-success">Submit</button>
+    </form>
+{% endif %}
+
 <p><a href="{% url 'accueil' %}">Retour en arrière</a></p>

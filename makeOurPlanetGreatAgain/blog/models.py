@@ -14,7 +14,7 @@ class User(AbstractUser):
     email = models.CharField(max_length=50)
     profil = models.TextField(null=True)
     dateInscription = models.DateTimeField(default=timezone.now, verbose_name="Date d'inscription")
-    isExpert = models.BooleanField(default=False)
+    isExpert = models.BooleanField()
     karma = models.IntegerField(default=0)
 
     class Meta:
@@ -111,3 +111,10 @@ class ExpertNote(models.Model):
     noteFaisabilite = models.IntegerField(default=0)
     noteUtilite = models.IntegerField(default=0)
     commentaire = models.CharField(max_length=255, default="")
+
+
+class ExpertForm(forms.Form):
+    noteBudget = forms.IntegerField(min_value=0, max_value=10)
+    noteFaisabilite = forms.IntegerField(min_value=0, max_value=10)
+    noteUtilite = forms.IntegerField(min_value=0, max_value=10)
+    commentaire = forms.CharField(max_length=255, required=False)

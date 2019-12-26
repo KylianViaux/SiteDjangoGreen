@@ -1,12 +1,16 @@
 <h1>Connexion</h1>
 {% if connexion == 'true' %}
-    <p>connexion reussie</p>
-    {% if perms.blog.evaluate_project %}
+    <p>Welcome {{ user.username }}</p>
+    <!--{% if perms.blog.evaluate_project %}
+        <p><a href="{% url 'deconnexion' %}">Evaluer un projet</a></p>
+    {% endif %}-->
+    {% if isExpert %}
         <p><a href="{% url 'deconnexion' %}">Evaluer un projet</a></p>
     {% endif %}
     <p><a href="{% url 'createProject' %}">Creer un projet</a></p>
     <p><a href="{% url 'deconnexion' %}">Deconnexion</a></p>
 {% else %}
+    <p>Welcome Anonyme</p>
     {% if connexion == 'false' %}
         <p>identifiant ou mot de passe incorrect</p>
     {% endif %}
