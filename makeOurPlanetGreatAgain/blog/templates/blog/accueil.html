@@ -23,9 +23,9 @@
 <h1>Liste des derniers utilisateurs</h1>
 {% for user in derniers_users %}
     <div class="user">
-    	<h3>{{ user.pseudo }}</h3>
-    	<p>{{ user.password|truncatewords_html:80 }}</p>
-        <p><a href="{% url 'lire' id=user.id slug=user.slug %}">Lire la suite</a></p>
+    	<h3>{{ user.username }}</h3>
+    	<p>{{  user.password|truncatewords_html:80 }}</p>
+        <p><a href="{% url 'userId' id=user.id slug=user.slug %}">Lire la suite</a></p>
     </div>
 {% empty %}
     <p>Aucun user.</p>

@@ -31,10 +31,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# For redirect url if loginRequired
 LOGIN_URL = '/accueil'
 
-# Application definition
+# For custom user authentication
+AUTH_USER_MODEL = 'blog.User'
 
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

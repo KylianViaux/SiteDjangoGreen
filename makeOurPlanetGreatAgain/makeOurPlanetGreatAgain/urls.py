@@ -20,7 +20,7 @@ from blog import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accueil', views.home, name='accueil'),
-    path('user/<int:id>-<slug:slug>', views.lire, name='lire'),
+    path('userId/<int:id>-<slug:slug>', views.voirUtilisateur, name='userId'),
     path('projectId/<int:id>', views.voirProjet, name='projectId'),
     path('inscription', views.inscription, name='inscription'),
     path('donate/<int:id>-<int:contribution>', views.donate, name='donate'),
