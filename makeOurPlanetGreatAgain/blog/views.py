@@ -89,23 +89,33 @@ def voirProjet(request, id):
     avg_noteUtilite = object.aggregate(Avg('noteUtilite')).get('noteUtilite__avg')
 
     # Si la personne connectée est un expert permet formulaire permettant de noter un projet
-    if request.user.isExpert:
-        if request.method == 'POST':
-                form = ExpertForm(request.POST)
-                if form.is_valid():
-                    current_user = request.user
-                    note = ExpertNote.objects.create(
-                       idExpert=current_user,
-                       idProject=project,
-                       noteBudget=request.POST.get('noteBudget'),
-                       noteFaisabilite=request.POST.get('noteFaisabilite'),
-                       noteUtilite=request.POST.get('noteUtilite'),
-                       commentaire=request.POST.get('commentaire'),
-                    )
-        else:
-            form = ExpertForm()
+    if request.user.is_authenticated:
+        if request.user.isExpert:
+            if request.method == 'POST':
+                    form = ExpertForm(request.POST)
+                    if form.is_valid():
+                        current_user = request.user
+                        note = ExpertNote.objects.create(
+                           idExpert=current_user,
+                           idProject=project,
+                           noteBudget=request.POST.get('noteBudget'),
+                           noteFaisabilite=request.POST.get('noteFaisabilite'),
+                           noteUtilite=request.POST.get('noteUtilite'),
+                           commentaire=request.POST.get('commentaire'),
+                        )
+            else:
+                form = ExpertForm()
 
-    return render(request, 'blog/voirProjet.html', { 'project':project, 'user':request.user, 'form':form, 'avg_noteBudget':avg_noteBudget, 'avg_noteFaisabilite':avg_noteFaisabilite,  'avg_noteUtilite':avg_noteUtilite})
+    # Renvoi la liste des 5 plus gros contributeurs ainsi que leur donation
+    contributions = []
+    objects = InvestorLink.objects.filter(idProject=project).select_related('idInvestisseur').order_by('-contribution')[0:5]
+    for object in objects:
+        array = {}
+        array['name'] = object.idInvestisseur.username
+        array['contribution'] = object.contribution
+        contributions.append(array)
+
+    return render(request, 'blog/voirProjet.html', { 'project':project, 'user':request.user, 'contributions':contributions, 'form':form, 'avg_noteBudget':avg_noteBudget, 'avg_noteFaisabilite':avg_noteFaisabilite,  'avg_noteUtilite':avg_noteUtilite})
 
 #--------------------------------------------------------------------------------------------------------------------------
 

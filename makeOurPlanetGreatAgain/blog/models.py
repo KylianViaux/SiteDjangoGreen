@@ -117,4 +117,4 @@ class ExpertForm(forms.Form):
     noteBudget = forms.IntegerField(min_value=0, max_value=10)
     noteFaisabilite = forms.IntegerField(min_value=0, max_value=10)
     noteUtilite = forms.IntegerField(min_value=0, max_value=10)
-    commentaire = forms.CharField(max_length=255, required=False)
+    commentaire = forms.CharField(max_length=255, widget=forms.Textarea, required=False)

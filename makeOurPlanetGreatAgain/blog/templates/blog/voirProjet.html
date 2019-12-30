@@ -1,26 +1,37 @@
 <h1>{{ project.nom }}</h1>
 <p> {{ project.description }}</p>
-<p> {{ project.budgetActuel }}</p>
-<p> {{ project.budgetCible }}</p>
+<p> budget actuel : {{ project.budgetActuel }}</p>
+<p> budget cible  : {{ project.budgetCible }}</p>
 
-Donate
-<p><a href="{% url 'donate' id=project.id contribution=10  %}">10</a></p>
-<p><a href="{% url 'donate' id=project.id contribution=25 %}">25</a></p>
-<p><a href="{% url 'donate' id=project.id contribution=50 %}">50</a></p>
+{% if user.is_authenticated %}
+    Donate
+    <p><a href="{% url 'donate' id=project.id contribution=10  %}">10</a></p>
+    <p><a href="{% url 'donate' id=project.id contribution=25 %}">25</a></p>
+    <p><a href="{% url 'donate' id=project.id contribution=50 %}">50</a></p>
+{% endif %}
 <!-- voir pour ajouter un formulaire avec "autre montant" -->
 
 
+<h1> Notes données au projet  </h1>
 <p>moyenne budget : {{ avg_noteBudget }}/10</p>
 <p>moyenne faisabilite : {{ avg_noteFaisabilite }}/10</p>
 <p>moyenne utilite : {{ avg_noteUtilite }}/10 </p>
 
 
 {% if user.isExpert %}
+    <h1> Attribuer une nouvelle note  </h1>
     <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         {{ form }}
         <button type="submit" class="form-button btn btn-success">Submit</button>
     </form>
 {% endif %}
+
+<h1> Liste des contributeurs </h1>
+{% for values in contributions %}
+    <p> {{ values.name }} - donation : {{ values.contribution }} </p>
+{% empty %}
+<p>Aucun user.</p>
+{% endfor %}
 
 <p><a href="{% url 'accueil' %}">Retour en arrière</a></p>
