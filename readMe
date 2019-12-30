@@ -38,6 +38,10 @@ Pour faire fonctionner la nouvelle version
       Si hors docker mettre à jour l'environnement avec toutes les données présentes dans le requirements.txt
       $ pip install <name>
 
+      Faire un dump de la base de données depuis le container
+      - Se mettre dans le repertoire SiteDjangoGreen\Databases
+      docker exec mysql_database /usr/bin/mysqldump -u root --password=password monblog  > dump.sql
+
 Procedure à faire pour le moment, après il faudra mettre la bonne base de données dans sous le dossier Databases
 et supprimer tous les fichiers sous migrations avant de donner le lien du git
 Il faudra aussi créer le superuser que le prof à demandé dans le pdf sur django
