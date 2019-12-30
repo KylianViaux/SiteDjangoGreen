@@ -1,0 +1,43 @@
+Pour faire fonctionner la nouvelle version
+
+0   - Pour utiliser docker lancer le fichier run.sh avec la commande
+      ./run.sh u
+      qui va s'occuper de démarrer tous les container
+
+0.5 - Si l'étape précedente à été effectuée, acceder à l'adresse suivante
+      http://localhost:9000/ afin de vérifier l'état des containers
+      Si il ont tous démarré acceder à l'adresse suivante
+      http://localhost:8000/accueil
+      /!\ Il se peut qu'il y ait des erreurs avec la base de données
+
+1   - Dans le cas ou il y a des erreur avec la base de données,
+      supprimer tous les fichier sous makeOurPlanetGreatAgain/blog/migrations
+      /!\ a l'exception du __init__.py /!\
+      1.1   Recréer la base de données
+              - Si fonctionnement avec docker
+                    $ docker-compose exec mysql bash
+                    $ mysql -p    -> (password = "password")
+                    $ drop database monblog;
+                    $ create database monblog;
+              - Si fonctionnement hors docker
+                    - Se connecter à mysql
+                    $ drop database monblog;
+                    $ create database monblog;
+
+      1.2   Mettre a jour les tables
+              - Si fonctionnement avec docker
+                $ docker-compose exec django bash
+                $ python manage.py makemigrations
+                $ python manage.py migrate
+              - Si fonctionnement hors docker
+                - Lancer l'environnement
+                $ python manage.py makemigrations
+                $ python manage.py migrate
+
+
+      Si hors docker mettre à jour l'environnement avec toutes les données présentes dans le requirements.txt
+      $ pip install <name>
+
+Procedure à faire pour le moment, après il faudra mettre la bonne base de données dans sous le dossier Databases
+et supprimer tous les fichiers sous migrations avant de donner le lien du git
+Il faudra aussi créer le superuser que le prof à demandé dans le pdf sur django
