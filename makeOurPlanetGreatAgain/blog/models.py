@@ -14,7 +14,7 @@ class User(AbstractUser):
     email = models.CharField(max_length=50)
     profil = models.TextField(null=True)
     dateInscription = models.DateTimeField(default=timezone.now, verbose_name="Date d'inscription")
-    isExpert = models.BooleanField()
+    isExpert = models.BooleanField(default=False)
     karma = models.IntegerField(default=0)
 
     class Meta:
