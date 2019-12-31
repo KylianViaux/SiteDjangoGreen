@@ -1,10 +1,11 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from blog.models import User, Project, UserForm, ProjectForm, ExpertForm, ExpertNote, ConnexionForm, InvestorLink
+from blog.models import User, Project, UserForm, ProjectForm, ExpertForm, ExpertNote, ConnexionForm, InvestorLink, ContactForm
 from django.views.generic import CreateView
 from django.http import HttpResponseRedirect
-from django.core.mail import send_mail, get_connection
+from django.core.mail import send_mail, get_connection, EmailMessage
 from django.db.models import Avg
+from django.template.loader import get_template
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.hashers import make_password
@@ -218,7 +219,7 @@ def inscription(request):
 
 # Permet a un utilisteur connecté de créer un projet
 @login_required(redirect_field_name='redirect_to')
-def createProject(request):
+def nouveauProject(request):
     submitted = False
     if request.method == 'POST':
         form = ProjectForm(request.POST)
@@ -233,12 +234,12 @@ def createProject(request):
                 budgetCible=budgetCible,
                 description=description
             )
-            return HttpResponseRedirect('/createProject?submitted=True')
+            return HttpResponseRedirect('/nouveauProject?submitted=True')
     else:
         form = ProjectForm()
         if 'submitted' in request.GET:
             submitted = True
-    return render(request, 'blog/createProject.html', {'form':form, 'submitted':submitted})
+    return render(request, 'blog/nouveauProject.html', {'form':form, 'submitted':submitted})
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -260,3 +261,47 @@ def evaluateProject(request, id):
 class PersonCreateView(CreateView):
     model = User
     fields = ('name', 'password', 'email', 'profil')
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+# Page pour les mentions légales
+def mentionsLegales(request):
+    return render(request, 'blog/mentionsLegales.html')
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+
+#
+def contact(request):
+    form_class = ContactForm
+
+    if request.method == 'POST':
+        form = form_class(data=request.POST)
+        if form.is_valid():
+            contact_name = request.POST.get('contact_name', '')
+            contact_email = request.POST.get('contact_email', '')
+            form_content = request.POST.get('content', '')
+
+            # Email the profile with the contact information
+            template = get_template('blog/contactTemplate.txt')
+            context = {
+                'contact_name': contact_name,
+                'contact_email': contact_email,
+                'form_content': form_content,
+            }
+            content = template.render(context)
+
+            email = EmailMessage(
+                "New contact form submission",
+                content,
+                "Your website" +'',
+                ['youremail@gmail.com'],
+                headers = {'Reply-To': contact_email }
+            )
+            email.send()
+            return HttpResponse('Thanks for contacting us!')
+    else:
+        form = ContactForm()
+
+    return render(request, 'blog/contact.html', { 'form': form_class,})

@@ -1,0 +1,22 @@
+<!doctype html>
+
+<html lang="fr">
+
+    <head>
+        <title>Contact</title>
+    </head>
+
+    <body>
+        <h1>Nous Contacter</h1>
+        <form role="form" action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Envoyer</button>
+        </form>
+        <p><a href="{% url 'accueil' %}">Accueil</a></p>
+        <p><a href="{% url 'mentionsLegales' %}">Crédits & Mentions légales</a></p>
+    </body>
+
+</html>
+
+

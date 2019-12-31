@@ -7,7 +7,7 @@
     {% if isExpert %}
         <p><a href="{% url 'deconnexion' %}">Evaluer un projet</a></p>
     {% endif %}
-    <p><a href="{% url 'createProject' %}">Creer un projet</a></p>
+    <p><a href="{% url 'nouveauProject' %}">Creer un projet</a></p>
     <p><a href="{% url 'deconnexion' %}">Deconnexion</a></p>
 {% else %}
     <p>Welcome Anonyme</p>
@@ -58,3 +58,6 @@
 {% empty %}
     <p>Aucun commentaires.</p>
 {% endfor %}
+
+<p><a href="{% url 'contact' %}"> Nous contacter</a></p>
+<p><a href="{% url 'mentionsLegales' %}"> Crédits & Mentions légales</a></p>

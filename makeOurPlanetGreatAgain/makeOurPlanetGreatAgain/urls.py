@@ -24,7 +24,9 @@ urlpatterns = [
     path('projectId/<int:id>', views.voirProjet, name='projectId'),
     path('inscription', views.inscription, name='inscription'),
     path('donate/<int:id>-<int:contribution>', views.donate, name='donate'),
-    path('createProject', views.createProject, name='createProject'),
+    path('nouveauProject', views.nouveauProject, name='nouveauProject'),
     path('deconnexion', views.deconnexion, name='deconnexion'),
-    path('confirmation', views.confirmation, name='confirmation')
+    path('confirmation', views.confirmation, name='confirmation'),
+    path('contact', views.contact, name='contact'),
+    path('mentionsLegales', views.mentionsLegales, name='mentionsLegales')
 ]
