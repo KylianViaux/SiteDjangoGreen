@@ -97,6 +97,8 @@ class InvestorLink(models.Model):
     idProject = models.ForeignKey('Project', on_delete=models.SET_NULL, null=True)
     idInvestisseur = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
     contribution = models.IntegerField(default=0)
+    derniereTransaction = models.IntegerField(default=0)
+    dateTransaction = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.contribution
@@ -110,6 +112,7 @@ class ExpertNote(models.Model):
     noteBudget = models.IntegerField(default=0)
     noteFaisabilite = models.IntegerField(default=0)
     noteUtilite = models.IntegerField(default=0)
+    noteGlobale = models.IntegerField(default=0)
     commentaire = models.CharField(max_length=255, default="")
 
 

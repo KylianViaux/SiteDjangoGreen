@@ -37,7 +37,7 @@
 
 
 
-<h1>liste des derniers project</h1>
+<h1>liste des derniers project crées</h1>
 {% for project in derniers_project %}
 <div class="project">
     <h3><a href="{% url 'projectId' id=project.id %}"> {{ project.nom }} </a></h3>
@@ -47,4 +47,14 @@
 </div>
 {% empty %}
 <p>Aucun projet.</p>
+{% endfor %}
+
+
+<h1>Dernier projet financé</h1>
+{{ last_contributed_project.nom }}
+<h3>Commentaire reçu </h3>
+{%  for values in comments %}
+    <p> {{ values.expertName }} - commentaire : {{ values.comment }} - note moyenne attribuée : {{ values.note }}</p>
+{% empty %}
+    <p>Aucun commentaires.</p>
 {% endfor %}

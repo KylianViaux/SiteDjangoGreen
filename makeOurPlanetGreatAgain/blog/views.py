@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from blog.models import User, Project, UserForm, ProjectForm, ExpertForm, ExpertNote, ConnexionForm, InvestorLink
 from django.views.generic import CreateView
 from django.http import HttpResponseRedirect
@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.hashers import make_password
 
+from datetime import datetime
 import logging
 # Permet d'afficher des log
 logger = logging.getLogger(__name__)
@@ -53,11 +54,27 @@ def home(request):
 	# Afficher tous les utilisateurs de notre blog
     users = User.objects.all()
 
-	# Afficher tous les projets de notre blog
-    project = Project.objects.all()
+	# Afficher tous les projets de notre blog par date de publication
+    project = Project.objects.all().order_by('-datePublication')
+
+    # Récupération du dernier projet financé ainsi que les commententaires reçus
+    objects = InvestorLink.objects.all().select_related('idProject').order_by('-dateTransaction')[0:1]
+    for object in objects:
+        project_id = object.idProject_id
+        logger.error("projectId {}".format(project_id))
+        last_contributed_project = get_object_or_404(Project, id=project_id)
+    objects = ExpertNote.objects.filter(idProject=project_id).select_related('idExpert')
+    comments = []
+    for object in objects:
+            array = {}
+            array['expertName'] = object.idExpert.username
+            array['note'] = object.noteGlobale
+            array['comment'] = object.commentaire
+            comments.append(array)
 
 	# Render
-    return render(request, 'blog/accueil.html', {'form':form, 'derniers_users':users, 'user':user, 'derniers_project':project, 'connexion':connexion, 'isExpert':isExpert})
+    return render(request, 'blog/accueil.html', { 'form':form,  'derniers_users':users, 'last_contributed_project':last_contributed_project,
+                                                  'comments':comments, 'user':user, 'derniers_project':project, 'connexion':connexion, 'isExpert':isExpert})
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -95,12 +112,17 @@ def voirProjet(request, id):
                     form = ExpertForm(request.POST)
                     if form.is_valid():
                         current_user = request.user
+                        note1=request.POST.get('noteBudget')
+                        note2=request.POST.get('noteFaisabilite')
+                        note3=request.POST.get('noteUtilite')
+                        note4=(int(note1)+int(note2)+int(note3))/3
                         note = ExpertNote.objects.create(
                            idExpert=current_user,
                            idProject=project,
-                           noteBudget=request.POST.get('noteBudget'),
-                           noteFaisabilite=request.POST.get('noteFaisabilite'),
-                           noteUtilite=request.POST.get('noteUtilite'),
+                           noteBudget=note1,
+                           noteFaisabilite=note2,
+                           noteUtilite=note3,
+                           noteGlobale=note4,
                            commentaire=request.POST.get('commentaire'),
                         )
             else:
@@ -130,15 +152,19 @@ def donate(request, id, contribution):
     # Ajout du lien entre le projet et le donateur
     # Si la transaction n'existe pas encore on la créée
     # Sinon on la met à jour
+    # On sauvegarde la transaction effectuée dans derniereTransaction
     object = InvestorLink.objects.filter(idProject=project, idInvestisseur=current_user)
     if not object.exists():
         donation = InvestorLink.objects.create(
             idProject=project,
             idInvestisseur=current_user,
-            contribution=contribution
+            contribution=contribution,
+            derniereTransaction=contribution
         )
     else :
         for obj in object:
+            obj.dateTransaction = datetime.now()
+            obj.derniereTransaction = contribution
             obj.contribution += contribution
             obj.save()
 
