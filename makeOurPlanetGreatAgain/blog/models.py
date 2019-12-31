@@ -24,25 +24,6 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-class UserForm(forms.Form):
-	username = forms.CharField(max_length=30, label='Username')
-	slug = forms.SlugField(max_length=100, label='Slug')
-	password = forms.CharField(max_length=40, label='Password', widget=forms.PasswordInput)
-	confirmationPassword = forms.CharField(max_length=40, label='Confirmation Password', widget=forms.PasswordInput)
-	email = forms.EmailField(label='Email')
-	isExpert = forms.BooleanField(required=False, initial=False, label='**Je suis un expert')
-	profil = forms.CharField(required=False, widget=forms.Textarea, label='Profil')
-
-
-class ConnexionForm(forms.Form):
-    username = forms.CharField(max_length=30, label='Username')
-    password = forms.CharField(max_length=40, label='Password', widget=forms.PasswordInput)
-
-
-class Membre(models.Model):
-    groupe = models.ForeignKey('Project', on_delete=models.CASCADE)
-    personne = models.ForeignKey('User', on_delete=models.CASCADE)
-
 #------------------------------------------------------------------------------------------------------------
 
 #Table pour stocker les images qui seront liées à un projet
@@ -66,7 +47,7 @@ class EstLiee(models.Model):
 
 class Project(models.Model):
     nom = models.CharField(max_length=30)
-    listeMembre = models.ManyToManyField(User,through='Membre',through_fields=('groupe', 'personne'))
+    idCreateur = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
     budgetActuel = models.IntegerField(default=0)
     budgetCible = models.IntegerField(default=0)
     description = models.CharField(max_length=255, default="")
@@ -83,13 +64,6 @@ class Project(models.Model):
             ("evaluate_project", "Evaluer un projet"),
         )
 
-
-
-class ProjectForm(forms.Form):
-	nom = forms.CharField(max_length=30, label='Name')
-	budgetCible = forms.IntegerField(label='Targeted budget',min_value=10)
-	description = forms.CharField(required=False, widget=forms.Textarea, label='description')
-
 #------------------------------------------------------------------------------------------------------------
 
 #Lien entre la table projet et utilisateur pour retrouver tous les investisseurs ainsi que la somme qu'ils ont investi sur chaque projet
@@ -104,8 +78,7 @@ class InvestorLink(models.Model):
         return self.contribution
 
 
-
-#Lien entre la table projet et utilisateur pour retrouver toutes les notation des experts sur chaque projet
+#Lien entre la table projet et utilisateur(expert) pour retrouver toutes les notation des experts sur chaque projet
 class ExpertNote(models.Model):
     idProject = models.ForeignKey('Project', on_delete=models.CASCADE, null=True)
     idExpert = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
@@ -114,13 +87,6 @@ class ExpertNote(models.Model):
     noteUtilite = models.IntegerField(default=0)
     noteGlobale = models.IntegerField(default=0)
     commentaire = models.CharField(max_length=255, default="")
-
-
-class ExpertForm(forms.Form):
-    noteBudget = forms.IntegerField(min_value=0, max_value=10)
-    noteFaisabilite = forms.IntegerField(min_value=0, max_value=10)
-    noteUtilite = forms.IntegerField(min_value=0, max_value=10)
-    commentaire = forms.CharField(max_length=255, widget=forms.Textarea, required=False)
 
 #------------------------------------------------------------------------------------------------------------
 
@@ -138,3 +104,29 @@ class ContactForm(forms.Form):
         self.fields['contact_name'].label = "Your name:"
         self.fields['contact_email'].label = "Your email:"
         self.fields['content'].label = "What do you want to say?"
+
+
+class UserForm(forms.Form):
+	username = forms.CharField(max_length=30, label='Username')
+	slug = forms.SlugField(max_length=100, label='Slug')
+	password = forms.CharField(max_length=40, label='Password', widget=forms.PasswordInput)
+	confirmationPassword = forms.CharField(max_length=40, label='Confirmation Password', widget=forms.PasswordInput)
+	email = forms.EmailField(label='Email')
+	isExpert = forms.BooleanField(required=False, initial=False, label='**Je suis un expert')
+	profil = forms.CharField(required=False, widget=forms.Textarea, label='Profil')
+
+
+class ConnexionForm(forms.Form):
+    username = forms.CharField(max_length=30, label='Username')
+    password = forms.CharField(max_length=40, label='Password', widget=forms.PasswordInput)
+
+class ExpertForm(forms.Form):
+    noteBudget = forms.IntegerField(min_value=0, max_value=10)
+    noteFaisabilite = forms.IntegerField(min_value=0, max_value=10)
+    noteUtilite = forms.IntegerField(min_value=0, max_value=10)
+    commentaire = forms.CharField(max_length=255, widget=forms.Textarea, required=False)
+
+class ProjectForm(forms.Form):
+	nom = forms.CharField(max_length=30, label='Name')
+	budgetCible = forms.IntegerField(label='Targeted budget',min_value=10)
+	description = forms.CharField(required=False, widget=forms.Textarea, label='description')

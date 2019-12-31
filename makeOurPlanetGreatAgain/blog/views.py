@@ -62,7 +62,6 @@ def home(request):
     objects = InvestorLink.objects.all().select_related('idProject').order_by('-dateTransaction')[0:1]
     for object in objects:
         project_id = object.idProject_id
-        logger.error("projectId {}".format(project_id))
         last_contributed_project = get_object_or_404(Project, id=project_id)
     objects = ExpertNote.objects.filter(idProject=project_id).select_related('idExpert')
     comments = []
@@ -94,59 +93,66 @@ def voirUtilisateur(request, id, slug):
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-# Retourne tous les projets existants
+# La fonction permet :
+#   - De visualiser toutes les informations concernant un projet
+#   - De contribuer à celui-ci pour n'importe quel utilisateur connecté
+#   - De commenter et d'évaluer un projet si l'utilisateur connecté est un expert
 def voirProjet(request, id):
 
-    project = get_object_or_404(Project, id=id)
-    form = ""
+    project = get_object_or_404(Project, id = id)
 
-    # Récupération de toutes les notes que le projet a recu
+    # Récupération des moyennes dans chaque catégorie que le projet à reçu
+    # Calcul de la moyenne sur toutes les notes
     object = ExpertNote.objects.filter(idProject=project.id)
     avg_noteBudget = object.aggregate(Avg('noteBudget')).get('noteBudget__avg')
     avg_noteFaisabilite = object.aggregate(Avg('noteFaisabilite')).get('noteFaisabilite__avg')
     avg_noteUtilite = object.aggregate(Avg('noteUtilite')).get('noteUtilite__avg')
-
-    # Si la personne connectée est un expert permet formulaire permettant de noter un projet
-    if request.user.is_authenticated:
-        if request.user.isExpert:
-            if request.method == 'POST':
-                    form = ExpertForm(request.POST)
-                    if form.is_valid():
-                        current_user = request.user
-                        note1=request.POST.get('noteBudget')
-                        note2=request.POST.get('noteFaisabilite')
-                        note3=request.POST.get('noteUtilite')
-                        note4=(int(note1)+int(note2)+int(note3))/3
-                        note = ExpertNote.objects.create(
-                           idExpert=current_user,
-                           idProject=project,
-                           noteBudget=note1,
-                           noteFaisabilite=note2,
-                           noteUtilite=note3,
-                           noteGlobale=note4,
-                           commentaire=request.POST.get('commentaire'),
-                        )
-            else:
-                form = ExpertForm()
+    if avg_noteBudget is not None:
+        moyenne = round((avg_noteBudget+avg_noteFaisabilite+avg_noteUtilite)/3,2)
 
     # Renvoi la liste des 5 plus gros contributeurs ainsi que leur donation
     contributions = []
     objects = InvestorLink.objects.filter(idProject=project).select_related('idInvestisseur').order_by('-contribution')[0:5]
     for object in objects:
         array = {}
-        array['name'] = object.idInvestisseur.username
+        array['nom'] = object.idInvestisseur.username
         array['contribution'] = object.contribution
         contributions.append(array)
 
-    return render(request, 'blog/voirProjet.html', { 'project':project, 'user':request.user, 'contributions':contributions, 'form':form, 'avg_noteBudget':avg_noteBudget, 'avg_noteFaisabilite':avg_noteFaisabilite,  'avg_noteUtilite':avg_noteUtilite})
+    # Si la personne connectée est un expert le formulaire permettant de noter ce projet est traité ou affiché
+    form = ""
+    if request.user.is_authenticated:
+        if request.user.isExpert:
+            if request.method == 'POST':
+                form = ExpertForm(request.POST)
+                if form.is_valid():
+                    current_user = request.user
+                    note1 = request.POST.get('noteBudget')
+                    note2 = request.POST.get('noteFaisabilite')
+                    note3 = request.POST.get('noteUtilite')
+                    note4 = (int(note1)+int(note2)+int(note3))/3
+                    note = ExpertNote.objects.create(
+                       idExpert = current_user,
+                       idProject = project,
+                       noteBudget = note1,
+                       noteFaisabilite = note2,
+                       noteUtilite = note3,
+                       noteGlobale = note4,
+                       commentaire = request.POST.get('commentaire'),
+                    )
+            else:
+                form = ExpertForm()
+
+    return render(request, 'blog/voirProjet.html', locals())
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-# Permet à un utilisateur connecté d'effectuer un don sur un projet definit par un identifiant
+# Permet à un utilisateur connecté d'effectuer un don sur un projet defini par son identifiant
+# Une fois le don effectué l'utilisateur est redirigé vers la page du projet
 @login_required(redirect_field_name='redirect_to')
 def donate(request, id, contribution):
 
-    #récupération de l'utilisateur connecté ainsi que du projet
+    # Récupération de l'utilisateur connecté ainsi que du projet
     current_user = request.user
     project = get_object_or_404(Project, id=id)
 
@@ -154,13 +160,13 @@ def donate(request, id, contribution):
     # Si la transaction n'existe pas encore on la créée
     # Sinon on la met à jour
     # On sauvegarde la transaction effectuée dans derniereTransaction
-    object = InvestorLink.objects.filter(idProject=project, idInvestisseur=current_user)
+    object = InvestorLink.objects.filter(idProject = project, idInvestisseur = current_user)
     if not object.exists():
         donation = InvestorLink.objects.create(
-            idProject=project,
-            idInvestisseur=current_user,
-            contribution=contribution,
-            derniereTransaction=contribution
+            idProject = project,
+            idInvestisseur = current_user,
+            contribution = contribution,
+            derniereTransaction = contribution
         )
     else :
         for obj in object:
@@ -172,7 +178,8 @@ def donate(request, id, contribution):
     # Maj du budget dans la table projet
     project.budgetActuel += contribution
     project.save()
-    return voirProjet(request, id)
+
+    return redirect('projectId', id = id)
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -224,12 +231,13 @@ def nouveauProject(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST)
         if form.is_valid():
-            cd = form.cleaned_data
+            utilisateur = request.user
             nom=request.POST.get('nom')
             budgetCible=request.POST.get('budgetCible')
             description=request.POST.get('description')
             project = Project.objects.create(
                 nom=nom,
+                createur=utilisateur,
                 budgetActuel=0,
                 budgetCible=budgetCible,
                 description=description
@@ -239,6 +247,7 @@ def nouveauProject(request):
         form = ProjectForm()
         if 'submitted' in request.GET:
             submitted = True
+
     return render(request, 'blog/nouveauProject.html', {'form':form, 'submitted':submitted})
 
 #--------------------------------------------------------------------------------------------------------------------------
