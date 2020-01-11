@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$1" == "u" ]; then
+if [ "$1" == "build" ]; then
   echo "starting portainer..."
   docker-compose up -d portainer
 
@@ -9,7 +9,7 @@ if [ "$1" == "u" ]; then
 
   mysqlStatus="null"
   while [ "$mysqlStatus" != "healthy" ]; do
-    mysqlStatus="$(docker inspect --format "{{ .State.Health.Status }}" mysql_database)"
+    mysqlStatus="$(docker inspect --format "{{ .State.Health.Status }}" mysql)"
     echo "mysql state : "$mysqlStatus"..."
     sleep 5
   done
@@ -17,13 +17,20 @@ if [ "$1" == "u" ]; then
   echo "starting django..."
   docker-compose up -d django
 
-elif [ "$1" == "d" ]; then
+  echo "starting nginx..."
+  docker-compose up -d nginx
+
+elif [ "$1" == "stop" ]; then
   docker-compose stop
+
+elif [ "$1" == "start" ]; then
+  docker-compose start
 
 elif [ "$1" == "help" ]; then
   echo "--- manuel d'utilisation ---"
-  echo "./run.sh u -- start the server"
-  echo "./run.sh d -- stop the server"
+  echo "./run.sh build -- build the server"
+  echo "./run.sh start -- start the server"
+  echo "./run.sh stop -- stop the server"
 
 else
   echo "commande inconnue"

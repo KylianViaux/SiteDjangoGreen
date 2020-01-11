@@ -1,9 +1,6 @@
 <h1>Connexion</h1>
 {% if connexion == 'true' %}
     <p>Welcome {{ user.username }}</p>
-    <!--{% if perms.blog.evaluate_project %}
-        <p><a href="{% url 'deconnexion' %}">Evaluer un projet</a></p>
-    {% endif %}-->
     {% if isExpert %}
         <p><a href="{% url 'deconnexion' %}">Evaluer un projet</a></p>
     {% endif %}
@@ -25,7 +22,7 @@
 
 
 <h1>Liste des derniers utilisateurs</h1>
-{% for user in derniers_users %}
+{% for user in users %}
     <div class="user">
     	<h3>{{ user.username }}</h3>
     	<p>{{  user.password|truncatewords_html:80 }}</p>
@@ -38,7 +35,7 @@
 
 
 <h1>liste des derniers project crées</h1>
-{% for project in derniers_project %}
+{% for project in projects %}
 <div class="project">
     <h3><a href="{% url 'projectId' id=project.id %}"> {{ project.nom }} </a></h3>
     <p> {{ project.description }}</p>

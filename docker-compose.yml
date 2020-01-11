@@ -4,7 +4,7 @@ services:
 
   portainer:
     image: portainer/portainer
-    container_name: "portainer"
+    container_name: portainer
     command: -H unix:///var/run/docker.sock
     restart: always
     ports:
@@ -14,32 +14,48 @@ services:
 
   mysql:
     image: mysql/mysql-server
-    container_name: "mysql_database"
+    container_name: mysql
     command: --default-authentication-plugin=mysql_native_password
-    ports:
-      - 8080:3306
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_PASSWORD=password
-      - MYSQL_DATABASE=monblog
-      - MYSQL_USER=root
+    env_file:
+      - config/.env
     volumes:
-      - ./Databases/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      - ./config/dump/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - django_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - 8000:8000
+    volumes:
+      - ./makeOurPlanetGreatAgain:/src
+      - ./config/nginx:/etc/nginx/conf.d
+    depends_on:
+      - django
+    networks:
+      - django_network
 
   django:
     image: django_server
-    container_name: "django_server"
+    container_name: django
     command: python manage.py runserver 0.0.0.0:8000
-    ports:
-      - 8000:8000
+    expose:
+      - 8000
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: config/django/Dockerfile
     stdin_open: true
     tty: true
     depends_on:
       - mysql
-    environment:
-      - DATABASE_URL=mysql://root:password@mysql:3306/monblog
+    env_file:
+      - config/.env
     volumes:
       - ./makeOurPlanetGreatAgain:/mopga
+    networks:
+      - django_network
+
+networks:
+  django_network:
+    driver: bridge

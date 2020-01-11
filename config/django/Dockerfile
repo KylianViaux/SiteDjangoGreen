@@ -18,7 +18,7 @@ RUN apt-get install -y \
 
 RUN mkdir /mopga
 WORKDIR /mopga
-ADD requirements.txt /mopga/
+ADD ./config/django/requirements.txt /mopga/
 RUN pip install -r requirements.txt
-ADD . /mopga/
+ADD ./makeOurPlanetGreatAgain /mopga/
 

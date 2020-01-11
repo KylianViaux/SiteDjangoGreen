@@ -56,25 +56,26 @@ def home(request):
     users = User.objects.all()
 
 	# Afficher tous les projets de notre blog par date de publication
-    project = Project.objects.all().order_by('-datePublication')
+    projects = Project.objects.all().order_by('-datePublication')
 
     # Récupération du dernier projet financé ainsi que les commententaires reçus
+    project_id = last_contributed_project = -1
     objects = InvestorLink.objects.all().select_related('idProject').order_by('-dateTransaction')[0:1]
     for object in objects:
         project_id = object.idProject_id
         last_contributed_project = get_object_or_404(Project, id=project_id)
-    objects = ExpertNote.objects.filter(idProject=project_id).select_related('idExpert')
-    comments = []
-    for object in objects:
-            array = {}
-            array['expertName'] = object.idExpert.username
-            array['note'] = object.noteGlobale
-            array['comment'] = object.commentaire
-            comments.append(array)
+    if project_id != -1:
+        objects = ExpertNote.objects.filter(idProject=project_id).select_related('idExpert')
+        comments = []
+        for object in objects:
+                array = {}
+                array['expertName'] = object.idExpert.username
+                array['note'] = object.noteGlobale
+                array['comment'] = object.commentaire
+                comments.append(array)
 
 	# Render
-    return render(request, 'blog/accueil.html', { 'form':form,  'derniers_users':users, 'last_contributed_project':last_contributed_project,
-                                                  'comments':comments, 'user':user, 'derniers_project':project, 'connexion':connexion, 'isExpert':isExpert})
+    return render(request, 'blog/accueil.html', locals())
 
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -237,7 +238,7 @@ def nouveauProject(request):
             description=request.POST.get('description')
             project = Project.objects.create(
                 nom=nom,
-                createur=utilisateur,
+                idCreateur=utilisateur,
                 budgetActuel=0,
                 budgetCible=budgetCible,
                 description=description
