@@ -53,7 +53,7 @@ def home(request):
         form = ConnexionForm()
 
 	# Afficher tous les utilisateurs de notre blog
-    users = User.objects.all()
+    users = User.objects.all().order_by('-dateInscription')[0:10]
 
 	# Afficher tous les projets de notre blog par date de publication
     projects = Project.objects.all().order_by('-datePublication')
@@ -83,7 +83,7 @@ def home(request):
 # Permet à un utilisateur connecté de se déconnecter
 def deconnexion(request):
     logout(request)
-    return home(request)
+    return redirect('accueil')
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -258,14 +258,8 @@ def confirmation(request):
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-# Permet à un utilisateur connecté qui est expert de noter un project
-@login_required(redirect_field_name='redirect_to')
-def evaluateProject(request, id):
-    if request.user.isExpert:
-        logger.error("expert")
-    else:
-        return home(request)
-
+def rechercher(request):
+    return render(request, 'blog/rechercher.html')
 #--------------------------------------------------------------------------------------------------------------------------
 
 class PersonCreateView(CreateView):
