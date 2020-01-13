@@ -83,14 +83,18 @@
         <div class="col">
             <p class="fa fa-search"><a href="{% url 'rechercher' %}"> looking for another project ?</a></p>
             <h5 class="text-center">Last contributed</h5>
-            <div class="row mb-4">
-                <img style="float:left;" src="{% static 'images/cover4.jpg' %}" width="50%"/>
-                <div class="ml-2">
-                    <h4><a href="{% url 'projectId' id=last_contributed_project.id %}"> {{ last_contributed_project.nom }} </a></h4>
-                    <p>funded {{ last_contributed_project.budgetActuel }} / {{ last_contributed_project.budgetCible }} </p>
-                    <p>by {{ last_contributed_project.idCreateur }}</p>
+                <div class="row mb-4">
+                {% if last_contributed_project != -1  %}
+                    <img style="float:left;" src="{% static 'images/cover4.jpg' %}" width="50%"/>
+                    <div class="ml-2">
+                        <h4><a href="{% url 'projectId' id=last_contributed_project.id %}"> {{ last_contributed_project.nom }} </a></h4>
+                        <p>funded {{ last_contributed_project.budgetActuel }} / {{ last_contributed_project.budgetCible }} </p>
+                        <p>by {{ last_contributed_project.idCreateur }}</p>
+                    </div>
+                "{% else %}
+                    <p>no project contributed yet</p>"
+                {% endif %}
                 </div>
-            </div>
             <h5>Notation</h5>
             <ul class="list-group" style="overflow: auto;height: 200px">
                 {% for values in comments %}
