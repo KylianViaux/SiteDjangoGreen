@@ -123,7 +123,7 @@
             <ul class="list-group" style="overflow: auto;height: 400px">
                 {% for user in users %}
                 <li class="list-group-item overflow-auto">
-                    {{ user.username }} - <a href="{% url 'userId' id=user.id slug=user.slug %}">See profile</a>
+                    {{ user.username }} - <a href="{% url 'userId' id=user.id %}">See profile</a>
                 </li>
                 {% empty %}
                 <li class="list-group-item">No one</li>

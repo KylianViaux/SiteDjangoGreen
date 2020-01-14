@@ -1,14 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <head>
+        <title>Nouveau Projet</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        {% load crispy_forms_tags %}
+        {% load bootstrap4 %}
+        {% load static %}
+    </head>
 </head>
+
+
 <body>
-
+truc pour rechercher
 </body>
-</html>
 
-<p><a href="{% url 'accueil' %}">Accueil</a></p>
-<p><a href="{% url 'contact' %}"> Nous contacter</a></p>
-<p><a href="{% url 'mentionsLegales' %}"> Crédits & Mentions légales</a></p>
+<!-- footer row -->
+<footer>
+    <div class="container pt-5 border-bottom">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-6 p-0 float-left mb-3 text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Links</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'accueil' %}">Home</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="#">Link</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="#">Link</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 p-0 mb-3 float-left text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Links</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="#">Link</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="#">Link</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="#">Link</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 mb-3 p-0 float-left text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Company</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'accueil' %}"></i>About us</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'contact' %}"></i>Contact us </a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 mb-3 p-0 float-left text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Connect</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="https://github.com/KylianViaux/SiteDjangoGreen" target="_blank"><i class="fa fa-github mr-1"></i> Github</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'accueil' %}"><i class="fa fa-twitter mr-1"></i> Twitter</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'accueil' %}"><i class="fa fa-facebook mr-1"></i> Facebook</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="py-4 d-flex justify-content-center align-items-center">
+                <a class="mr-4" href="{% url 'mentionsLegales' %}">Privacy & terms</a>
+            </div>
+        </div>
+    </div>
+    </div>
+</footer>
+<!-- //footer row -->
+
+</html>

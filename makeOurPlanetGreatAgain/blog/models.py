@@ -9,7 +9,6 @@ from django.contrib.auth.models import AbstractUser
 # Custom user model
 class User(AbstractUser):
     username = models.CharField(max_length=30, unique=True)
-    slug = models.SlugField(max_length=100)
     password = models.CharField(max_length=128)
     email = models.CharField(max_length=50)
     profil = models.TextField(null=True)
@@ -105,7 +104,6 @@ class ContactForm(forms.Form):
 
 class UserForm(forms.Form):
 	username = forms.CharField(max_length=30, label='Username')
-	slug = forms.SlugField(max_length=100, label='Slug')
 	password = forms.CharField(max_length=40, label='Password', widget=forms.PasswordInput)
 	confirmationPassword = forms.CharField(max_length=40, label='Confirmation Password', widget=forms.PasswordInput)
 	email = forms.EmailField(label='Email')
