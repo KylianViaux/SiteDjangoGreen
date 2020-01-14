@@ -47,6 +47,7 @@ class EstLiee(models.Model):
 class Project(models.Model):
     nom = models.CharField(max_length=30)
     idCreateur = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
+    difficulte = models.IntegerField(default=0)
     budgetActuel = models.IntegerField(default=0)
     budgetCible = models.IntegerField(default=0)
     description = models.CharField(max_length=255, default="")
@@ -89,12 +90,22 @@ class ExpertNote(models.Model):
 
 #------------------------------------------------------------------------------------------------------------
 
+#Lien pour savoir quel expert a noter un autre et sur quel projet
+class KarmaCheck(models.Model):
+    idProject = models.ForeignKey('Project', on_delete=models.CASCADE, null=True )
+    ExpertEvaluateur = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, related_name='ExpertEvaluateur')
+    ExpertEvalue = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, related_name='ExpertEvalue')
+    evaluation = models.IntegerField(default=0)
+    oldEvaluation = models.IntegerField(default=0)
+
+
+#------------------------------------------------------------------------------------------------------------
+
 class ContactForm(forms.Form):
     contact_name = forms.CharField(required=True)
     contact_email = forms.EmailField(required=True)
     content = forms.CharField(required=True,widget=forms.Textarea)
 
-    # the new bit we're adding
     def __init__(self, *args, **kwargs):
         super(ContactForm, self).__init__(*args, **kwargs)
         self.fields['contact_name'].label = "Your name:"
@@ -110,7 +121,6 @@ class UserForm(forms.Form):
 	isExpert = forms.BooleanField(required=False, initial=False, label='(1) Expert')
 	profil = forms.CharField(required=False, widget=forms.Textarea, label='Profil')
 
-
 class ConnexionForm(forms.Form):
     username = forms.CharField(max_length=30, label='Username')
     password = forms.CharField(max_length=40, label='Password', widget=forms.PasswordInput)
@@ -124,4 +134,5 @@ class ExpertForm(forms.Form):
 class ProjectForm(forms.Form):
 	nom = forms.CharField(max_length=30, label='Name')
 	budgetCible = forms.IntegerField(label='Targeted budget',min_value=10)
-	description = forms.CharField(required=False, widget=forms.Textarea, label='description')
+	difficulte = forms.IntegerField(min_value=1, max_value=10)
+	description = forms.CharField(required=False, widget=forms.Textarea)

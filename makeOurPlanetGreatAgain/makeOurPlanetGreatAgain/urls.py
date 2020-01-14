@@ -26,8 +26,8 @@ urlpatterns = [
     path('donate/<int:id>-<int:contribution>', views.donate, name='donate'),
     path('nouveauProject', views.nouveauProject, name='nouveauProject'),
     path('deconnexion', views.deconnexion, name='deconnexion'),
-    path('confirmation', views.confirmation, name='confirmation'),
     path('rechercher', views.rechercher, name='rechercher'),
     path('contact', views.contact, name='contact'),
+    path('updateKarma/<int:idProject>-<int:idEvaluateur>-<int:idEvalue>-<int:note>', views.updateKarma, name='updateKarma'),
     path('mentionsLegales', views.mentionsLegales, name='mentionsLegales')
 ]

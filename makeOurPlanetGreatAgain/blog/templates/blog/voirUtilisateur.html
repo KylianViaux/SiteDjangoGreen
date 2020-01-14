@@ -4,6 +4,9 @@
 
 <div class="contenu">{{ user.profil|linebreaks }}</div>
 
+{% if user.isExpert %}
+<p>karma : {{ user.karma }}</p>
+{% endif %}
 <h1>Projets crées pas cet utilisateur</h1>
 {% for values in projects %}
 <p><a class="text-warning" href="{% url 'projectId' id=values.id %}">{{ values.nom }}</a>{{ values.description }}</p>
