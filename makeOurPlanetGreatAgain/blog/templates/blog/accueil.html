@@ -97,7 +97,8 @@
                <img style="float:left;" src="{% static 'images/cover4.jpg' %}" width="50%"/>
                 <div class="ml-2">
                     <h4><a class="text-warning" href="{% url 'projectId' id=last_contributed_project.id %}"> {{ last_contributed_project.nom }} </a></h4>
-                    <p> Funded : {{ last_contributed_project.budgetActuel }} / {{ last_contributed_project.budgetCible }} </br> Creator : {{ last_contributed_project.idCreateur }}
+                    <p> Funded : {{ last_contributed_project.budgetActuel }} / {{ last_contributed_project.budgetCible }}</br>
+                        Creator :<a href="{% url 'userId' id=last_contributed_project.idCreateur.id %}"> {{ last_contributed_project.idCreateur }}</a>
                     </p>
                 </div>
                 {% else %}
@@ -180,40 +181,4 @@
     </div>
 </footer>
 <!-- //footer row -->
-
 </html>
-
-
-<!--
-<h1>Liste des derniers utilisateurs</h1>
-{% for user in users %}
-<div class="user">
-    <h3>{{ user.username }}</h3>
-    <p>{{  user.password|truncatewords_html:80 }}</p>
-    <p><a href="{% url 'userId' id=user.id slug=user.slug %}">Lire la suite</a></p>
-</div>
-{% empty %}
-<p>Aucun user.</p>
-{% endfor %}
-
-<h1>liste des derniers project crées</h1>
-{% for project in projects %}
-<div class="project">
-    <h3><a href="{% url 'projectId' id=project.id %}"> {{ project.nom }} </a></h3>
-    <p> {{ project.description }}</p>
-    <p> Budget requis {{ project.budgetCible }}</p>
-    <p> Budget actuel {{ project.budgetActuel }}</p>
-</div>
-{% empty %}
-<p>Aucun projet.</p>
-{% endfor %}
-
-<h1>Dernier projet financé</h1>
-{{ last_contributed_project.nom }}
-<h3>Commentaire reçu </h3>
-{%  for values in comments %}
-    <p> {{ values.expertName }} - commentaire : {{ values.comment }} - note moyenne attribuée : {{ values.note }}</p>
-{% empty %}
-    <p>Aucun commentaires.</p>
-{% endfor %}
--->
