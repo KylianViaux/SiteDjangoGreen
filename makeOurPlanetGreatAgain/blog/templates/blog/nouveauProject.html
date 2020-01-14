@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="fr">
 
 <head>
@@ -10,36 +9,76 @@
     {% load static %}
 </head>
 
-<body style="background-image: url({% static 'images/cover2.jpg' %}); background-repeat: no-repeat; background-size: cover">
-<div class="form-container container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="form__section-title text-warning">Nouveau Projet</h1>
-        </div>
-        <div class="col-md-12">
-            {% bootstrap_messages %}
-
-            {% if submitted %}
-            <p class="success">
-            <p><a href="{% url 'accueil' %}">Nouveau projet</a></p>
-            </p>
-
-            {% else %}
-            <form method="post" enctype="multipart/form-data" novalidate>
-                {% csrf_token %}
-                {{ form|crispy }}
-                <div class="row">
-                    <div class="col-12 text-center">
-                        {% buttons %}
-                        <button type="submit" class="form-button btn btn-success">Submit</button>
-                        {% endbuttons %}
-                        <p><a href="{% url 'confirmation' %}">Validation 2</a></p>
+<!-- style="background-image: url({% static 'images/cover2.jpg' %}); background-repeat: no-repeat; background-size: cover" -->
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center text-warning">New Projet</h1>
+            </div>
+            <div class="col-md-12">
+                {% if submitted %}
+                    <p class="success text-center">The project has been added<a href="{% url 'accueil' %}"> Return Home</a></p>
+                {% else %}
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="form-button btn btn-success">Submit</button>
+                        </div>
                     </div>
-                </div>
-            </form>
-            {% endif %}
+                </form>
+                {% endif %}
+            </div>
         </div>
     </div>
-</div>
 </body>
+
+<!-- footer row -->
+<footer>
+    <div class="container pt-5 border-bottom">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-6 p-0 float-left mb-3 text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Links</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'accueil' %}">Home</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="#">Link</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="#">Link</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 p-0 mb-3 float-left text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Links</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="#">Link</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="#">Link</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="#">Link</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 mb-3 p-0 float-left text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Company</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'accueil' %}"></i>About us</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'contact' %}"></i>Contact us </a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 mb-3 p-0 float-left text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Connect</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="https://github.com/KylianViaux/SiteDjangoGreen" target="_blank"><i class="fa fa-github mr-1"></i> Github</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'accueil' %}"><i class="fa fa-twitter mr-1"></i> Twitter</a></li>
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'accueil' %}"><i class="fa fa-facebook mr-1"></i> Facebook</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="py-4 d-flex justify-content-center align-items-center">
+                <a class="mr-4" href="{% url 'mentionsLegales' %}">Privacy & terms</a>
+            </div>
+        </div>
+    </div>
+    </div>
+</footer>
+<!-- //footer row -->
+
 </html>

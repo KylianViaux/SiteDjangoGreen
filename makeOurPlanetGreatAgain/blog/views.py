@@ -88,8 +88,8 @@ def deconnexion(request):
 #--------------------------------------------------------------------------------------------------------------------------
 
 # Retourne tous les utilisateurs existants
-def voirUtilisateur(request, id, slug):
-    user = get_object_or_404(User, id=id, slug=slug)
+def voirUtilisateur(request, id):
+    user = get_object_or_404(User, id=id)
     return render(request, 'blog/voirUtilisateur.html', {'user':user})
 
 #--------------------------------------------------------------------------------------------------------------------------
@@ -201,7 +201,6 @@ def inscription(request):
 			    expert = False
 			user = User.objects.create(
 				username=username,
-				slug=username,
 				password=password,
 				email=email,
 				isExpert=expert,

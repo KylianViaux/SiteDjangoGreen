@@ -9,7 +9,6 @@ from django.contrib.auth.models import AbstractUser
 # Custom user model
 class User(AbstractUser):
     username = models.CharField(max_length=30, unique=True)
-    slug = models.SlugField(max_length=100)
     password = models.CharField(max_length=128)
     email = models.CharField(max_length=50)
     profil = models.TextField(null=True)
@@ -93,10 +92,7 @@ class ExpertNote(models.Model):
 class ContactForm(forms.Form):
     contact_name = forms.CharField(required=True)
     contact_email = forms.EmailField(required=True)
-    content = forms.CharField(
-        required=True,
-        widget=forms.Textarea
-    )
+    content = forms.CharField(required=True,widget=forms.Textarea)
 
     # the new bit we're adding
     def __init__(self, *args, **kwargs):
@@ -108,11 +104,10 @@ class ContactForm(forms.Form):
 
 class UserForm(forms.Form):
 	username = forms.CharField(max_length=30, label='Username')
-	slug = forms.SlugField(max_length=100, label='Slug')
 	password = forms.CharField(max_length=40, label='Password', widget=forms.PasswordInput)
 	confirmationPassword = forms.CharField(max_length=40, label='Confirmation Password', widget=forms.PasswordInput)
 	email = forms.EmailField(label='Email')
-	isExpert = forms.BooleanField(required=False, initial=False, label='**Je suis un expert')
+	isExpert = forms.BooleanField(required=False, initial=False, label='(1) Expert')
 	profil = forms.CharField(required=False, widget=forms.Textarea, label='Profil')
 
 
