@@ -24,7 +24,7 @@ services:
       - django_network
 
   nginx:
-    image: nginx:alpine
+    image: nginx
     container_name: nginx
     ports:
       - 8000:8000
