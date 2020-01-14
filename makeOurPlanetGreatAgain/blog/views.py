@@ -90,7 +90,11 @@ def deconnexion(request):
 # Retourne tous les utilisateurs existants
 def voirUtilisateur(request, id):
     user = get_object_or_404(User, id=id)
-    return render(request, 'blog/voirUtilisateur.html', {'user':user})
+
+    # Renvoi tous les projets que cet utilisateur à crée
+    projects = Project.objects.filter(idCreateur = user)
+
+    return render(request, 'blog/voirUtilisateur.html', locals())
 
 #--------------------------------------------------------------------------------------------------------------------------
 

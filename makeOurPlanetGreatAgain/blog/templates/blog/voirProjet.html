@@ -3,7 +3,7 @@
 <p> budget actuel : {{ project.budgetActuel }}</p>
 <p> budget cible  : {{ project.budgetCible }}</p>
 <p> posté le : {{ project.datePublication }}</p>
-<p> createur : {{ project.idCreateur }} </p>
+<p> créateur : <a href="{% url 'userId' id=project.idCreateur.id %}">{{ project.idCreateur }}</a></p>
 
 <h3> Notes données au projet  </h3>
 <p>moyenne budget : {{ avg_noteBudget }}/10</p>
