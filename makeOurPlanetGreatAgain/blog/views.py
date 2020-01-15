@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from blog.models import User, Project, UserForm, ProjectForm, ExpertForm, ExpertNote, ConnexionForm, InvestorLink, ContactForm
+from blog.models import User, Project, UserForm, ProjectForm, ExpertForm, ExpertNote, ConnexionForm, InvestorLink, ContactForm, RechercheForm
 from django.views.generic import CreateView
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail, get_connection, EmailMessage
@@ -258,8 +258,78 @@ def confirmation(request):
 #--------------------------------------------------------------------------------------------------------------------------
 
 def rechercher(request):
-    return render(request, 'blog/rechercher.html')
-#--------------------------------------------------------------------------------------------------------------------------
+    submitted = False
+    projects = []
+    if request.method == 'POST':
+        form = RechercheForm(request.POST)
+        if form.is_valid():
+            choix_et_ou_ou = request.POST.get('choix_et_ou_ou')
+            nom_utilisateur = request.POST.get('nom_createur')
+            nom_project = request.POST.get('nom_project')
+            budget_min = request.POST.get('budget_min')
+            budget_max = request.POST.get('budget_max')
+            note_moyenne_min = request.POST.get('note_moyenne_min')
+            note_moyenne_max = request.POST.get('note_moyenne_max')
+            listObjects = Project.objects.all()
+			# Il faut tout appliqués.
+            if choix_et_ou_ou:
+                if nom_utilisateur != '':
+                    listUser = User.objects.filter(username__icontains=nom_utilisateur)
+                    if len(listUser) == 0: 
+                           listObjects = Project.objects.none()
+                    else:                       
+                        for user in listUser:
+                            if user.id != None:
+                                listObjects = listObjects.filter(idCreateur=user.id)			
+                if nom_project != '':
+                    listObjects = listObjects.filter(nom__icontains=nom_project)
+                if budget_min != None and budget_min != '':
+                    listObjects = listObjects.filter(budgetCible__gte=budget_min)
+                if budget_max != None and budget_max != '':
+                    listObjects = listObjects.filter(budgetCible__lte=budget_max)
+                for object in listObjects:
+                    array = {}
+                    array['nom'] = object.nom
+                    array['createur'] = object.idCreateur
+                    array['budgetActuel'] = object.budgetActuel
+                    array['budgetCible'] = object.budgetCible
+                    array['description'] = object.description
+                    array['datePublication'] = object.datePublication
+                    projects.append(array)
+                submitted = True
+            # Il faut tout séparés.  
+            else:
+                listObjects = Project.objects.none()
+                listUser = User.objects.filter(username__icontains=nom_utilisateur)
+                if nom_utilisateur != '':
+                    if len(listUser) != 0:                     
+                        for user in listUser:
+                            listObjects = listObjects | Project.objects.filter(idCreateur=user.id)
+                if nom_project != '':
+                    listObjects = listObjects | Project.objects.filter(nom__icontains=nom_project)
+                if budget_min != None and budget_min != '':
+                    listObjects = listObjects | Project.objects.filter(budgetCible__gte=budget_min)
+                if budget_max != None and budget_max != '':
+                    listObjects = listObjects | Project.objects.filter(budgetCible__lte=budget_max)
+                for object in listObjects:
+                    array = {}
+                    array['nom'] = object.nom
+                    array['createur'] = object.idCreateur
+                    array['budgetActuel'] = object.budgetActuel
+                    array['budgetCible'] = object.budgetCible
+                    array['description'] = object.description
+                    array['datePublication'] = object.datePublication
+                    projects.append(array)
+                submitted = True
+         	    # Pour la recherche par 
+            submitted = True
+    else:
+        form = RechercheForm()
+        if 'submitted' in request.GET:
+            submitted = True
+    return render(request, 'blog/rechercher.html', {'form':form, 'submitted':submitted, 'projects':projects	})
+    
+#-------------------------------------------------------------------------------------------------------------------------
 
 class PersonCreateView(CreateView):
     model = User

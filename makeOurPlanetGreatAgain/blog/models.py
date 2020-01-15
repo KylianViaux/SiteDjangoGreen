@@ -125,3 +125,12 @@ class ProjectForm(forms.Form):
 	nom = forms.CharField(max_length=30, label='Name')
 	budgetCible = forms.IntegerField(label='Targeted budget',min_value=10)
 	description = forms.CharField(required=False, widget=forms.Textarea, label='description')
+
+class RechercheForm(forms.Form):
+	choix_et_ou_ou = forms.BooleanField(label='Voulez vous que les résultats appliquent toutes les conditions ?', required=False)
+	nom_createur = forms.CharField(max_length=30, label='nom du créateur', required=False)
+	nom_project = forms.CharField(max_length=30, label='nom du project', required=False)
+	budget_min = forms.IntegerField(label='Budget minimum', required=False)
+	budget_max = forms.IntegerField(label='Budget Maximus Decimus Meridius', required=False)
+	note_moyenne_min = forms.IntegerField(label='Moyenne des notes minimum', required=False)
+	note_moyenne_max = forms.IntegerField(label='Moyenne des notes Maximus Decimus Meridius', required=False)

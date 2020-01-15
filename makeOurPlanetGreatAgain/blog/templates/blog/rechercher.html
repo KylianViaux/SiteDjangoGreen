@@ -1,19 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="fr">
+
 <head>
-    <head>
-        <title>Nouveau Projet</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        {% load crispy_forms_tags %}
-        {% load bootstrap4 %}
-        {% load static %}
-    </head>
+		<title>Recherche de projet</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    {% load crispy_forms_tags %}
+    {% load bootstrap4 %}
+    {% load static %}
 </head>
 
 
 <body>
-truc pour rechercher
+
+		<div class="container">
+                <h1 class="text-center text-warning">Truc pour rechercher</h1>
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="row">
+           		 <div class="col-12 text-center">
+                   <button type="submit" class="form-button btn btn-success">Submit</button>
+               </div>
+            </div>
+    		</form>
+		</div>
 </body>
+
+
+{% if submitted %}
+<br>
+<h3 class="text-center"> Liste des projects </h3>
+	<table class="table">
+		<thead>
+			<th scope="col">#</th>
+			<th scope="col">Nom du projet</th>
+			<th scope="col">Nom du créateur</th>
+			<th scope="col">Description du projet</th>
+			<th scope="col">Budget actuel</th>
+			<th scope="col">Budget cible</th>
+			<th scope="col">Date de publication</th>	
+		</thead>
+		<tbody>		
+	{% for values in projects %}
+		<tr>
+			<th scope="row">{{ forloop.counter }}</th>
+			<th> {{ values.nom }} </th>
+			<th> {{ values.createur }} </th>
+			<th> {{ values.description }} </th>
+			<th> {{ values.budgetActuel }} </th>
+			<th> {{ values.budgetCible }} </th>
+			<th> {{ values.datePublication }} </th>
+		</tr>
+	{% empty %}
+		<th scope="row">{{ 0 }}</th>
+		<th>  -  </th>
+		<th>  -  </th>
+		<th>  -  </th>
+		<th>  -  </th>
+		<th>  -  </th>
+		<th>  -  </th>
+	{% endfor %}
+		</tbody>
+		</table>
+{% endif %}
 
 <!-- footer row -->
 <footer>
