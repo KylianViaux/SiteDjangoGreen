@@ -12,6 +12,7 @@ from django.contrib.auth.hashers import make_password
 
 from datetime import datetime
 import logging
+import ast
 # Permet d'afficher des log
 logger = logging.getLogger(__name__)
 #logger.error("message")
@@ -301,6 +302,17 @@ def rechercher(request):
                     listObjects = listObjects.filter(budgetCible__gte=budget_min)
                 if budget_max != None and budget_max != '':
                     listObjects = listObjects.filter(budgetCible__lte=budget_max)
+                listObjectsTempo = Project.objects.all()
+                for project in listObjectsTempo:
+                    listeNotes = ExpertNote.objects.filter(idProject=project.id)
+                    noteMoyenne = 0
+                    for note in listeNotes:
+                        noteMoyenne = noteMoyenne + note.noteGlobale
+                    noteMoyenne = noteMoyenne / len(listeNotes)
+                    if note_moyenne_min != '' and noteMoyenne <= float(note_moyenne_min):
+                        listObjects = listObjects & listObjectsTempo.exclude(id=project.id)
+                    if note_moyenne_max != '' and noteMoyenne >= float(note_moyenne_max):
+                        listObjects = listObjects & listObjectsTempo.exclude(id=project.id) 
                 for object in listObjects:
                     array = {}
                     array['nom'] = object.nom
@@ -325,6 +337,20 @@ def rechercher(request):
                     listObjects = listObjects | Project.objects.filter(budgetCible__gte=budget_min)
                 if budget_max != None and budget_max != '':
                     listObjects = listObjects | Project.objects.filter(budgetCible__lte=budget_max)
+                listObjectsTempo = Project.objects.all()
+                listObjectsPartie1 = Project.objects.none()
+                listObjectsPartie2 = Project.objects.none()
+                for project in listObjectsTempo:
+                    listeNotes = ExpertNote.objects.filter(idProject=project.id)
+                    noteMoyenne = 0
+                    for note in listeNotes:
+                        noteMoyenne = noteMoyenne + note.noteGlobale
+                    noteMoyenne = noteMoyenne / len(listeNotes)
+                    if note_moyenne_min != '' and noteMoyenne > float(note_moyenne_min):
+                        listObjectsPartie1 = listObjectsPartie1 | listObjectsTempo.filter(id=project.id)
+                    if note_moyenne_max != '' and noteMoyenne < float(note_moyenne_max):
+                        listObjectsPartie2 = listObjectsPartie2 | listObjectsTempo.filter(id=project.id) 
+                listObjects = listObjects | listObjectsPartie1 | listObjectsPartie2
                 for object in listObjects:
                     array = {}
                     array['nom'] = object.nom
