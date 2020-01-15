@@ -1,9 +1,12 @@
+{% load mathfilters %}
+
 <h1>{{ project.nom }}</h1>
 <p> description : {{ project.description }}</p>
 <p> budget actuel : {{ project.budgetActuel }}</p>
 <p> budget cible  : {{ project.budgetCible }}</p>
 <p> posté le : {{ project.datePublication }}</p>
-<p> createur : {{ project.idCreateur }} </p>
+<p> créateur : <a href="{% url 'userId' id=project.idCreateur.id %}">{{ project.idCreateur }}</a></p>
+<p>difficulte du projet : {{ project.difficulte }}</p>
 
 <h3> Notes données au projet  </h3>
 <p>moyenne budget : {{ avg_noteBudget }}/10</p>
@@ -30,13 +33,23 @@
     <p><a href="{% url 'donate' id=project.id contribution=50 %}">50</a></p>
 
     <!-- Si l'utilisateur est un expert -->
-    {% if user.isExpert %}
-    <h1> Attribuer une nouvelle note  </h1>
-    <form method="post" enctype="multipart/form-data" novalidate>
-        {% csrf_token %}
-        {{ form }}
-        <button type="submit" class="form-button btn btn-success">Submit</button>
-    </form>
+    {% if user.isExpert  %}
+        <!-- Si l'expert a suffisament de karma pour evaluer ce projet -->
+        {% if user.karma >= project.difficulte|mul:100 %}
+            <!-- Si cet expert n'as pas encore évalué le projet -->
+            {% if not hasEvaluated %}
+                <h1> Attribuer une nouvelle note  </h1>
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    {{ form }}
+                    <button type="submit" class="form-button btn btn-success">Submit</button>
+                </form>
+            {% else %}
+                <p>le projet a deja ete evalue</p>
+            {% endif %}
+        {% else %}
+            <p> pas assez de karma pour evaluer le projet</p>
+        {% endif %}
     {% endif %}
 
 {% endif %}

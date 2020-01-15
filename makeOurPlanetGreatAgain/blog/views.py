@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from blog.models import User, Project, UserForm, ProjectForm, ExpertForm, ExpertNote, ConnexionForm, InvestorLink, ContactForm, RechercheForm
+from blog.models import User, Project, UserForm, ProjectForm, ExpertForm, ExpertNote, ConnexionForm, InvestorLink, ContactForm, KarmaCheck
 from django.views.generic import CreateView
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail, get_connection, EmailMessage
@@ -69,6 +70,8 @@ def home(request):
         comments = []
         for object in objects:
                 array = {}
+                array['idExpert'] = object.idExpert.id
+                array['karma'] = object.idExpert.karma
                 array['expertName'] = object.idExpert.username
                 array['note'] = object.noteGlobale
                 array['comment'] = object.commentaire
@@ -90,7 +93,11 @@ def deconnexion(request):
 # Retourne tous les utilisateurs existants
 def voirUtilisateur(request, id):
     user = get_object_or_404(User, id=id)
-    return render(request, 'blog/voirUtilisateur.html', {'user':user})
+
+    # Renvoi tous les projets que cet utilisateur à crée
+    projects = Project.objects.filter(idCreateur = user)
+
+    return render(request, 'blog/voirUtilisateur.html', locals())
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -120,29 +127,36 @@ def voirProjet(request, id):
         array['contribution'] = object.contribution
         contributions.append(array)
 
-    # Si la personne connectée est un expert le formulaire permettant de noter ce projet est traité ou affiché
+    # Si la personne connectée est un expert qui n'a pas encore évalué le projet alors
+    # le formulaire permettant de noter ce projet sera affiché
     form = ""
+    hasEvaluated = False
     if request.user.is_authenticated:
         if request.user.isExpert:
-            if request.method == 'POST':
-                form = ExpertForm(request.POST)
-                if form.is_valid():
-                    current_user = request.user
-                    note1 = request.POST.get('noteBudget')
-                    note2 = request.POST.get('noteFaisabilite')
-                    note3 = request.POST.get('noteUtilite')
-                    note4 = (int(note1)+int(note2)+int(note3))/3
-                    note = ExpertNote.objects.create(
-                       idExpert = current_user,
-                       idProject = project,
-                       noteBudget = note1,
-                       noteFaisabilite = note2,
-                       noteUtilite = note3,
-                       noteGlobale = note4,
-                       commentaire = request.POST.get('commentaire'),
-                    )
+            if not ExpertNote.objects.filter(idProject=id, idExpert=request.user.id).exists():
+                if request.method == 'POST':
+                    form = ExpertForm(request.POST)
+                    if form.is_valid():
+                        current_user = request.user
+                        note1 = request.POST.get('noteBudget')
+                        note2 = request.POST.get('noteFaisabilite')
+                        note3 = request.POST.get('noteUtilite')
+                        note4 = (int(note1)+int(note2)+int(note3))/3
+                        note = ExpertNote.objects.create(
+                           idExpert = current_user,
+                           idProject = project,
+                           noteBudget = note1,
+                           noteFaisabilite = note2,
+                           noteUtilite = note3,
+                           noteGlobale = note4,
+                           commentaire = request.POST.get('commentaire'),
+                        )
+                        return redirect('projectId', id = id)
+                else:
+                    form = ExpertForm()
             else:
-                form = ExpertForm()
+                #l'expert a déjà noté ce projet
+                hasEvaluated = True
 
     return render(request, 'blog/voirProjet.html', locals())
 
@@ -197,14 +211,17 @@ def inscription(request):
 			profil=request.POST.get('profil')
 			if(request.POST.get('isExpert') == 'on'):
 			    expert = True
+			    karma = 110
 			else:
 			    expert = False
+			    karma = 0
 			user = User.objects.create(
 				username=username,
 				password=password,
 				email=email,
 				isExpert=expert,
-				profil=profil
+				profil=profil,
+				karma=karma
 			)
 			#assert False
 			con = get_connection('django.core.mail.backends.console.EmailBackend')
@@ -224,7 +241,7 @@ def inscription(request):
 
 #--------------------------------------------------------------------------------------------------------------------------
 
-# Permet a un utilisteur connecté de créer un projet
+# Permet à un utilisteur connecté de créer un projet
 @login_required(redirect_field_name='redirect_to')
 def nouveauProject(request):
     submitted = False
@@ -234,12 +251,14 @@ def nouveauProject(request):
             utilisateur = request.user
             nom=request.POST.get('nom')
             budgetCible=request.POST.get('budgetCible')
+            difficulte=request.POST.get('difficulte')
             description=request.POST.get('description')
             project = Project.objects.create(
                 nom=nom,
                 idCreateur=utilisateur,
                 budgetActuel=0,
                 budgetCible=budgetCible,
+                difficulte=difficulte,
                 description=description
             )
             return HttpResponseRedirect('/nouveauProject?submitted=True')
@@ -250,10 +269,6 @@ def nouveauProject(request):
 
     return render(request, 'blog/nouveauProject.html', {'form':form, 'submitted':submitted})
 
-#--------------------------------------------------------------------------------------------------------------------------
-
-def confirmation(request):
-    return render(request, 'blog/confirmation.html')
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -341,11 +356,9 @@ class PersonCreateView(CreateView):
 def mentionsLegales(request):
     return render(request, 'blog/mentionsLegales.html')
 
-
 #--------------------------------------------------------------------------------------------------------------------------
 
-
-#
+# Formulaire de contact
 def contact(request):
     form_class = ContactForm
 
@@ -356,7 +369,6 @@ def contact(request):
             contact_email = request.POST.get('contact_email', '')
             form_content = request.POST.get('content', '')
 
-            # Email the profile with the contact information
             template = get_template('blog/contactTemplate.txt')
             context = {
                 'contact_name': contact_name,
@@ -378,3 +390,49 @@ def contact(request):
         form = ContactForm()
 
     return render(request, 'blog/contact.html', { 'form': form_class,})
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+# Gestion du karma d'un expert
+# Un expert gagne/perd du karma en fonction des commentaires et notes qu'il donne à un projet
+# Un expert différent du premier peux lui attribuer un point de karma (plus/moins)
+# Un expert ne peut pas noter son propre commentaire et il ne peut pas non plus noter plusieurs fois le même commentaire d'un autre expert
+def updateKarma(request, idProject, idEvaluateur, idEvalue, note):
+
+    # Récupération des objets a partir de leur id
+    project = get_object_or_404(Project, id=idProject)
+    evaluateur = get_object_or_404(User, id=idEvaluateur)
+    evalue = get_object_or_404(User, id=idEvalue)
+
+    # Il y a deux cas
+        # - Un expert n'a pas encore évalué le commentaire d'un autre expert, dans ce cas on defini le karma en fontion de l'évaluation de l'expert et un crée un objet
+        #   qui permet de connaitre la note qu'un expert a donné a un autre sur un projet défini
+        # - Un expert souhaite modifier la note qu'il a donnée a un expert sur un commentaire, dans ce cas on retrouve la partie concernée et on la modifie
+    object = KarmaCheck.objects.filter(idProject=project, ExpertEvaluateur=evaluateur, ExpertEvalue=evalue)
+    if not object.exists():
+        if note == 0:
+            evalue.karma -= 1
+            note = -1
+        else:
+            evalue.karma += 1
+            evalue.save()
+        KarmaCheck.objects.create(
+            idProject=project,
+            ExpertEvaluateur=evaluateur,
+            ExpertEvalue=evalue,
+            evaluation=note,
+            oldEvaluation=note
+        )
+    else :
+        for obj in object:
+            obj.evaluation = note
+            if obj.oldEvaluation != obj.evaluation:
+                obj.oldEvaluation = obj.evaluation
+                obj.save()
+                if note == 0:
+                    evalue.karma -= 1
+                else:
+                    evalue.karma += 1
+                evalue.save()
+
+    return redirect('accueil')
