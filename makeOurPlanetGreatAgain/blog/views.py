@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from blog.models import User, Project, UserForm, ProjectForm, ExpertForm, ExpertNote, ConnexionForm, InvestorLink, ContactForm, RechercheForm, KarmaCheck
+from blog.models import User, Project, UserForm, ProjectForm, ExpertForm, ExpertNote, ConnexionForm, InvestorLink, ContactForm, RechercheForm, KarmaCheck, ImageProjectForm
 from django.views.generic import CreateView
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail, get_connection, EmailMessage
@@ -88,16 +88,39 @@ def deconnexion(request):
     logout(request)
     return redirect('accueil')
 
+
 #--------------------------------------------------------------------------------------------------------------------------
 
 # Retourne tous les utilisateurs existants
 def voirUtilisateur(request, id):
     user = get_object_or_404(User, id=id)
 
+
+
+    if request.user.is_authenticated:
+        utilisateur = request.user
+    
+    
     # Renvoi tous les projets que cet utilisateur à crée
     projects = Project.objects.filter(idCreateur = user)
 
     return render(request, 'blog/voirUtilisateur.html', locals())
+    
+    
+#--------------------------------------------------------------------------------------------------------------------------
+
+def pageTestImage(request, id):
+
+    if request.method == 'POST':
+        form = ImageProjectForm(request.POST, request.FILES)
+        if form.is_valid():
+            pro = Project.objects.get(id=id)
+            pro.project_Main_Image = form.cleaned_data['project_Main_Image']
+            pro.save()
+            return redirect('pageTestImage', id) 
+    else:
+        form = ImageProjectForm()
+        return render(request, 'blog/pageTestImage.html', locals())
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -109,6 +132,11 @@ def voirProjet(request, id):
 
     project = get_object_or_404(Project, id = id)
 
+
+    if request.user.is_authenticated:
+        utilisateurConnecter = request.user
+        
+        
     # Récupération des moyennes dans chaque catégorie que le projet à reçu
     # Calcul de la moyenne sur toutes les notes
     object = ExpertNote.objects.filter(idProject=project.id)
@@ -305,14 +333,15 @@ def rechercher(request):
                 listObjectsTempo = Project.objects.all()
                 for project in listObjectsTempo:
                     listeNotes = ExpertNote.objects.filter(idProject=project.id)
-                    noteMoyenne = 0
-                    for note in listeNotes:
-                        noteMoyenne = noteMoyenne + note.noteGlobale
-                    noteMoyenne = noteMoyenne / len(listeNotes)
-                    if note_moyenne_min != '' and noteMoyenne <= float(note_moyenne_min):
-                        listObjects = listObjects & listObjectsTempo.exclude(id=project.id)
-                    if note_moyenne_max != '' and noteMoyenne >= float(note_moyenne_max):
-                        listObjects = listObjects & listObjectsTempo.exclude(id=project.id) 
+                    if len(listNotes) != 0:
+                        noteMoyenne = 0
+                        for note in listeNotes:
+                            noteMoyenne = noteMoyenne + note.noteGlobale
+                        noteMoyenne = noteMoyenne / len(listeNotes)
+                        if note_moyenne_min != '' and noteMoyenne <= float(note_moyenne_min):
+                            listObjects = listObjects & listObjectsTempo.exclude(id=project.id)
+                        if note_moyenne_max != '' and noteMoyenne >= float(note_moyenne_max):
+                            listObjects = listObjects & listObjectsTempo.exclude(id=project.id) 
                 for object in listObjects:
                     array = {}
                     array['nom'] = object.nom

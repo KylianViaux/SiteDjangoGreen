@@ -53,7 +53,8 @@ class Project(models.Model):
     description = models.CharField(max_length=255, default="")
     listeImage = models.ManyToManyField(Image,through='EstLiee',through_fields=('projet', 'image'))
     datePublication = models.DateTimeField(default=timezone.now,verbose_name="Date de publication")
-
+    project_Main_Image = models.ImageField(upload_to='images/')
+    
     def __str__(self):
         return self.nom
 
@@ -145,3 +146,14 @@ class RechercheForm(forms.Form):
 	budget_max = forms.IntegerField(label='Budget Maximus Decimus Meridius', required=False)
 	note_moyenne_min = forms.IntegerField(label='Moyenne des notes minimum', required=False)
 	note_moyenne_max = forms.IntegerField(label='Moyenne des notes Maximus Decimus Meridius', required=False)
+
+#Test image
+#class ImageProject(models.Model):
+#    name = models.CharField(max_length=50)
+#    project_Main_Image = models.ImageField(upload_to='images/')
+
+class ImageProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project	
+        fields = ['project_Main_Image']
+

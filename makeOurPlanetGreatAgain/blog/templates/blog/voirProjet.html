@@ -1,4 +1,16 @@
-{% load mathfilters %}
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <title>Voir Projet</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    {% load crispy_forms_tags %}
+    {% load bootstrap4 %}
+    {% load static %}
+    {% load mathfilters %}
+</head>
+
+
 
 <h1>{{ project.nom }}</h1>
 <p> description : {{ project.description }}</p>
@@ -25,6 +37,22 @@
 {% endfor %}
 
 
+
+{% if user.id == utilisateurConnecter.id %}
+<p> meme personne </p>
+<p><a href="{% url 'pageTestImage' id=project.id %}">pageTestImage</a></p>
+
+{% else %}
+<p> pas la meme personne </p>
+{% endif %}
+
+{% if project.project_Main_Image == none %}
+<p>ttt</p>
+{% else %}
+<img src="{{ project.project_Main_Image.url }}" class="img-responsive" alt="Italian Trulli"/>
+<p>{{ project.project_Main_Image.url }}   test {{ project.description }}</p>
+<p>ppp</p>
+{% endif %}
 <!-- Si l'utilisateur est connecté -->
 {% if user.is_authenticated %}
     <h3>Donner</h3>

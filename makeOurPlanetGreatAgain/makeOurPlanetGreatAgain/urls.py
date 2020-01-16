@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from blog import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,5 +31,6 @@ urlpatterns = [
     path('rechercher', views.rechercher, name='rechercher'),
     path('contact', views.contact, name='contact'),
     path('updateKarma/<int:idProject>-<int:idEvaluateur>-<int:idEvalue>-<int:note>', views.updateKarma, name='updateKarma'),
-    path('mentionsLegales', views.mentionsLegales, name='mentionsLegales')
-]
+    path('mentionsLegales', views.mentionsLegales, name='mentionsLegales'),
+    path ('pageTestImage/<int:id>', views.pageTestImage, name='pageTestImage')
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
