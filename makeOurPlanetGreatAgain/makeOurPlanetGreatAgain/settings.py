@@ -125,7 +125,7 @@ STATICFILES_DIRS = [
 
 
 # For redirect url if loginRequired
-LOGIN_URL = '/accueil'
+LOGIN_URL = '/'
 
 # For custom user authentication
 AUTH_USER_MODEL = 'blog.User'
