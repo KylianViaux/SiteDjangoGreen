@@ -131,11 +131,6 @@ def pageTestImage(request, id):
 def voirProjet(request, id):
 
     project = get_object_or_404(Project, id = id)
-
-
-    if request.user.is_authenticated:
-        utilisateurConnecter = request.user
-        
         
     # Récupération des moyennes dans chaque catégorie que le projet à reçu
     # Calcul de la moyenne sur toutes les notes
@@ -151,6 +146,7 @@ def voirProjet(request, id):
     objects = InvestorLink.objects.filter(idProject=project).select_related('idInvestisseur').order_by('-contribution')[0:5]
     for object in objects:
         array = {}
+        array['id'] = object.idInvestisseur.id
         array['nom'] = object.idInvestisseur.username
         array['contribution'] = object.contribution
         contributions.append(array)
@@ -260,7 +256,7 @@ def inscription(request):
                  ['siteowner@example.com'],
                  connection=con
             )
-			return home(request)
+			return redirect('accueil')
 	else:
 		form = UserForm()
 		if 'submitted' in request.GET:
@@ -301,8 +297,11 @@ def nouveauProject(request):
 #--------------------------------------------------------------------------------------------------------------------------
 
 def rechercher(request):
+    # Afficher tous les projets de notre blog par date de publication
+    allProjects = Project.objects.all().order_by('-datePublication')
     submitted = False
     projects = []
+
     if request.method == 'POST':
         form = RechercheForm(request.POST)
         if form.is_valid():
@@ -333,7 +332,7 @@ def rechercher(request):
                 listObjectsTempo = Project.objects.all()
                 for project in listObjectsTempo:
                     listeNotes = ExpertNote.objects.filter(idProject=project.id)
-                    if len(listNotes) != 0:
+                    if len(listeNotes) != 0:
                         noteMoyenne = 0
                         for note in listeNotes:
                             noteMoyenne = noteMoyenne + note.noteGlobale
@@ -344,6 +343,8 @@ def rechercher(request):
                             listObjects = listObjects & listObjectsTempo.exclude(id=project.id) 
                 for object in listObjects:
                     array = {}
+                    array['id'] = object.id
+                    array['project_Main_Image'] = object.project_Main_Image
                     array['nom'] = object.nom
                     array['createur'] = object.idCreateur
                     array['budgetActuel'] = object.budgetActuel
@@ -372,16 +373,19 @@ def rechercher(request):
                 for project in listObjectsTempo:
                     listeNotes = ExpertNote.objects.filter(idProject=project.id)
                     noteMoyenne = 0
-                    for note in listeNotes:
-                        noteMoyenne = noteMoyenne + note.noteGlobale
-                    noteMoyenne = noteMoyenne / len(listeNotes)
-                    if note_moyenne_min != '' and noteMoyenne > float(note_moyenne_min):
-                        listObjectsPartie1 = listObjectsPartie1 | listObjectsTempo.filter(id=project.id)
-                    if note_moyenne_max != '' and noteMoyenne < float(note_moyenne_max):
-                        listObjectsPartie2 = listObjectsPartie2 | listObjectsTempo.filter(id=project.id) 
+                    if len(listeNotes) != 0:
+                        for note in listeNotes:
+                            noteMoyenne = noteMoyenne + note.noteGlobale
+                        noteMoyenne = noteMoyenne / len(listeNotes)
+                        if note_moyenne_min != '' and noteMoyenne > float(note_moyenne_min):
+                            listObjectsPartie1 = listObjectsPartie1 | listObjectsTempo.filter(id=project.id)
+                        if note_moyenne_max != '' and noteMoyenne < float(note_moyenne_max):
+                            listObjectsPartie2 = listObjectsPartie2 | listObjectsTempo.filter(id=project.id)
                 listObjects = listObjects | listObjectsPartie1 | listObjectsPartie2
                 for object in listObjects:
                     array = {}
+                    array['id'] = object.id
+                    array['project_Main_Image'] = object.project_Main_Image
                     array['nom'] = object.nom
                     array['createur'] = object.idCreateur
                     array['budgetActuel'] = object.budgetActuel
@@ -396,7 +400,7 @@ def rechercher(request):
         form = RechercheForm()
         if 'submitted' in request.GET:
             submitted = True
-    return render(request, 'blog/rechercher.html', {'form':form, 'submitted':submitted, 'projects':projects	})
+    return render(request, 'blog/rechercher.html', locals())
     
 #-------------------------------------------------------------------------------------------------------------------------
 

@@ -2,67 +2,110 @@
 <html lang="fr">
 
 <head>
-		<title>Recherche de projet</title>
+    <title>Recherche de projet</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/javascript.util/0.12.12/javascript.util.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     {% load crispy_forms_tags %}
     {% load bootstrap4 %}
     {% load static %}
+    {% load mathfilters %}
 </head>
 
-
-<body>
-
-		<div class="container">
-                <h1 class="text-center text-warning">Recherche de projets</h1>
-        <form method="post" enctype="multipart/form-data" novalidate>
-            {% csrf_token %}
-            {{ form|crispy }}
-            <div class="row">
-           		 <div class="col-12 text-center">
-                   <button type="submit" class="form-button btn btn-success">Submit</button>
-               </div>
+<!-- header row -->
+<header>
+    <div class="row bg-light ml-3 mr-3 header">
+        <div class="col col-md-auto">
+            <img src="{% static 'images/logo.png' %}" height="100" class="d-inline-block align-middle mr-2">
+            <span class="text-uppercase font-weight-bold">MaKe Our Planet Great Again</span>
+        </div>
+        <div class="col"></div>
+        <div class="col col-md-auto">
+            {% if request.user.is_authenticated %}
+            <p>Welcome {{ request.user.username }}</p>
+            <div >
+                <p class="fa fa-plus-square-o"><a href="{% url 'nouveauProject' %}"> Create a new project</a></p></br>
+                <p class="fa fa-sign-out"><a href="{% url 'deconnexion' %}"> Sign out</a></p>
             </div>
-    		</form>
-		</div>
+            {% else %}
+            <p class="text-right"><a href="{% url 'accueil' %}">Sign in !</a></p>
+            <p class="text-right">No account yet ? <a href="{% url 'inscription' %}">Join Us !</a></p>
+            {% endif %}
+        </div>
+    </div>
+</header>
+<!-- //header row -->
+
+<!-- body row -->
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-auto">
+                <h1 class="text-center text-warning">Recherche de projets</h1>
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="form-button btn btn-success">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <hr class="clearfix w-100 d-md-none pb-3">
+            <div class="col-6">
+                <h1 class="text-center text-warning">Project list</h1>
+                {% if submitted %}
+                <ul class="list-group" style="overflow: auto;height: 580px">
+                    {% for values in projects  %}
+                    <li class="list-group-item overflow-auto">
+                        {% if values.project_Main_Image|length == 0  %}
+                            <img style="float:left;min-height:120px;max-height:120px;min-width:50%;max-width:50%;margin-right:7px" src="{% static 'images/cover.jpg' %}">
+                        {% else %}
+                            <img style="float:left;min-height:120px;max-height:120px;min-width:50%;max-width:50%;margin-right:7px" src="{{ values.project_Main_Image.url }}"/>
+                        {% endif %}
+                        <div>
+                            Project name : <a href="{% url 'projectId' id=values.id %}">{{ values.nom }}</a></br>
+                            Creator name : <a href="{% url 'userId' id=values.createur.id %}">{{ values.createur }}</a></br>
+                            Current budget  : {{ values.budgetActuel }}</br>
+                            Targeted budget :{{ values.budgetCible }}</br>
+                            Publication : {{ values.datePublication|date:"d M Y" }}
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-danger text-center">No project fit this search</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                    <ul class="list-group" style="overflow: auto;height: 580px">
+                        {% for values in allProjects  %}
+                        <li class="list-group-item overflow-auto">
+                            {% if values.project_Main_Image|length == 0  %}
+                                <img style="float:left;min-height:120px;max-height:120px;min-width:50%;max-width:50%;margin-right:7px" src="{% static 'images/cover.jpg' %}">
+                            {% else %}
+                                <img style="float:left;min-height:120px;max-height:120px;min-width:50%;max-width:50%;margin-right:7px" src="{{ values.project_Main_Image.url }}"/>
+                            {% endif %}
+                            <div>
+                                Project name : <a href="{% url 'projectId' id=values.id %}">{{ values.nom }}</a></br>
+                                Creator name : <a href="{% url 'userId' id=values.idCreateur.id %}">{{ values.idCreateur }}</a></br>
+                                Current budget  : {{ values.budgetActuel }}</br>
+                                Targeted budget :{{ values.budgetCible }}</br>
+                                Publication : {{ values.datePublication|date:"d M Y" }}
+                            </div>
+                        </li>
+                        {% empty %}
+                            <li class="list-group-item">No project yet</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </body>
+<!-- //body row -->
 
-
-{% if submitted %}
-<br>
-<h3 class="text-center"> Liste des projects </h3>
-	<table class="table">
-		<thead>
-			<th scope="col">#</th>
-			<th scope="col">Nom du projet</th>
-			<th scope="col">Nom du créateur</th>
-			<th scope="col">Description du projet</th>
-			<th scope="col">Budget actuel</th>
-			<th scope="col">Budget cible</th>
-			<th scope="col">Date de publication</th>	
-		</thead>
-		<tbody>		
-	{% for values in projects %}
-		<tr>
-			<th scope="row">{{ forloop.counter }}</th>
-			<th> {{ values.nom }} </th>
-			<th> {{ values.createur }} </th>
-			<th> {{ values.description }} </th>
-			<th> {{ values.budgetActuel }} </th>
-			<th> {{ values.budgetCible }} </th>
-			<th> {{ values.datePublication }} </th>
-		</tr>
-	{% empty %}
-		<th scope="row">{{ 0 }}</th>
-		<th>  -  </th>
-		<th>  -  </th>
-		<th>  -  </th>
-		<th>  -  </th>
-		<th>  -  </th>
-		<th>  -  </th>
-	{% endfor %}
-		</tbody>
-		</table>
-{% endif %}
 
 <!-- footer row -->
 <footer>

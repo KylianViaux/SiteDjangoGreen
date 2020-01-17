@@ -38,78 +38,89 @@
 </header>
 <!-- //header row -->
 
-
 <body>
-    <div class="container">
-        <h1>{{ project.nom }}</h1>
-        <p> description : {{ project.description }}</p>
-        <p> budget actuel : {{ project.budgetActuel }}</p>
-        <p> budget cible  : {{ project.budgetCible }}</p>
-        <p> posté le : {{ project.datePublication }}</p>
-        <p> créateur : <a href="{% url 'userId' id=project.idCreateur.id %}">{{ project.idCreateur }}</a></p>
-        <p>difficulte du projet : {{ project.difficulte }}</p>
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col mt-5">
+                {% if project.project_Main_Image|length == 0  %}
+                    <img style="float:left;min-height:300px;max-height:300px;min-width:100%;max-width:100%" src="{% static 'images/cover.jpg' %}" height="300px">
+                {% else %}
+                    <img style="float:left;min-height:300px;max-height:300px;min-width:100%;max-width:100%" src="{{ project.project_Main_Image.url }}"/>
+                {% endif %}
+            </div>
+            <hr class="clearfix w-100 d-md-none pb-3">
+            <div class="col">
+                <h1 class="text-center">{{ project.nom }}</h1>
+                {% if project.idCreateur.id == request.user.id %}
+                    <p><a class="fa fa-image" href="{% url 'pageTestImage' id=project.id %}"> Upload a picture</a></p>
+                {% endif %}
+                <div class="border-top border-bottom">
+                    Creator : <a href="{% url 'userId' id=project.idCreateur.id %}">{{ project.idCreateur }}</a></br>
+                    Description : {{ project.description }}</br>
+                    Budget needed : {{ project.budgetActuel }}</br>
+                    Budget targeted : {{ project.budgetCible }}</br>
+                    Difficulty : {{ project.difficulte }}</br>
+                    Post on : {{ project.datePublication }}</br>
+                </div>
+                <div>
+                    <h5 >Notation</h5>
+                    {% if moyenne is not None  %}
+                    <p>budget : {{ avg_noteBudget }}/10</br> faisabilité : {{ avg_noteFaisabilite }}/10</br> utilité : {{ avg_noteUtilite }}/10 </p>
+                    <p>moyenne globale : {{ moyenne }}/10 </p>
+                    {% else %}
+                        <p class="text-warning">this project has not been evaluated yet</p>
+                    {% endif %}
+                </div>
+            </div>
+            <hr class="clearfix w-100 d-md-none pb-3">
+            <div class="col">
+                {% if user.is_authenticated %}
+                    <h4 class="text-center text-danger">DONATE</h4>
+                    <div class="row">
+                        <div class="col text-center"><p><a href="{% url 'donate' id=project.id contribution=10  %}">10</a></p></div>
+                        <div class="col text-center"><p><a href="{% url 'donate' id=project.id contribution=25 %}">25</a></p></div>
+                        <div class="col text-center"><p><a href="{% url 'donate' id=project.id contribution=50 %}">50</a></p></div>
+                    </div>
+                {% endif %}
+                <h4 class="text-center mb-3">Contributors</h4>
+                <ul class="list-group" style="overflow: auto;height: 230px">
+                    {% for values in contributions %}
+                    <li class="list-group-item overflow-auto">
+                        <a href="{% url 'userId' id=values.id %}">{{ values.nom }}</a> - donation : {{ values.contribution }}
+                    </li>
+                    {% empty %}
+                        <li class="list-group-item">No contributors</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Si l'utilisateur est connecté -->
+            {% if user.is_authenticated %}
+                <!-- Si l'utilisateur est un expert -->
+                {% if user.isExpert  %}
+                    <!-- Si l'expert a suffisament de karma pour evaluer ce projet -->
+                    {% if user.karma >= project.difficulte|mul:100 %}
+                        <!-- Si cet expert n'as pas encore évalué le projet -->
+                        {% if not hasEvaluated %}
+                            <div class="col mt-3">
+                                <h1 class="text-center"> Evaluate project</h1>
 
-        <h3> Notes données au projet  </h3>
-        <p>moyenne budget : {{ avg_noteBudget }}/10</p>
-        <p>moyenne faisabilité : {{ avg_noteFaisabilite }}/10</p>
-        <p>moyenne utilité : {{ avg_noteUtilite }}/10 </p>
-        {% if moyenne is not None  %}
-        <p>moyenne globale : {{ moyenne }}/10 </p>
-        {% endif %}
-
-
-{% if user.id == utilisateurConnecter.id %}
-<p> meme personne </p>
-<p><a href="{% url 'pageTestImage' id=project.id %}">pageTestImage</a></p>
-
-{% else %}
-<p> pas la meme personne </p>
-{% endif %}
-
-{% if project.project_Main_Image == none %}
-<p>ttt</p>
-{% else %}
-<img src="{{ project.project_Main_Image.url }}" class="img-responsive" alt="Italian Trulli"/>
-<p>{{ project.project_Main_Image.url }}   test {{ project.description }}</p>
-<p>ppp</p>
-{% endif %}
-
-        <h3> Liste des contributeurs </h3>
-        {% for values in contributions %}
-        <p> {{ values.nom }} - donation : {{ values.contribution }} </p>
-        {% empty %}
-        <p>Aucun contributeur.</p>
-        {% endfor %}
-
-
-        <!-- Si l'utilisateur est connecté -->
-        {% if user.is_authenticated %}
-        <h3>Donner</h3>
-        <p><a href="{% url 'donate' id=project.id contribution=10  %}">10</a></p>
-        <p><a href="{% url 'donate' id=project.id contribution=25 %}">25</a></p>
-        <p><a href="{% url 'donate' id=project.id contribution=50 %}">50</a></p>
-
-        <!-- Si l'utilisateur est un expert -->
-        {% if user.isExpert  %}
-        <!-- Si l'expert a suffisament de karma pour evaluer ce projet -->
-        {% if user.karma >= project.difficulte|mul:100 %}
-        <!-- Si cet expert n'as pas encore évalué le projet -->
-        {% if not hasEvaluated %}
-        <h1> Attribuer une nouvelle note  </h1>
-        <form method="post" enctype="multipart/form-data" novalidate>
-            {% csrf_token %}
-            {{ form }}
-            <button type="submit" class="form-button btn btn-success">Submit</button>
-        </form>
-        {% else %}
-        <p>le projet a deja ete evalue</p>
-        {% endif %}
-        {% else %}
-        <p> pas assez de karma pour evaluer le projet</p>
-        {% endif %}
-        {% endif %}
-
-        {% endif %}
+                                <form method="post" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    {{ form|crispy  }}
+                                    <button type="submit" class="form-button btn btn-success">Submit</button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <div class="col mt-4"><h5 class="text-center text-warning">You have already evaluated this project</h5></div>
+                        {% endif %}
+                    {% else %}
+                        <div class="col mt-4"><h5 class="text-center text-danger">Not enough karma to evaluate this project</h5></div>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
     </div>
 </body>
 

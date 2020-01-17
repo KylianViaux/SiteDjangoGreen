@@ -25,25 +25,6 @@ class User(AbstractUser):
 
 #------------------------------------------------------------------------------------------------------------
 
-#Table pour stocker les images qui seront liées à un projet
-class Image(models.Model):
-    #list de copyright https://fr.wikipedia.org/wiki/Licence_Creative_Commons
-    COPYRIGHT = (
-          (1, 'libre'),
-          (2, 'propriétaire'),
-          (3, 'libre diffusion'),
-    )
-    nom = models.CharField(max_length=30)
-    copyright = models.PositiveSmallIntegerField(choices=COPYRIGHT, default=1,)
-    #image = models.ImageField(upload_to='pic_folder/', default = 'pic_folder/')
-    description = models.CharField(max_length=255, default="")
-
-class EstLiee(models.Model):
-    projet = models.ForeignKey('Project', on_delete=models.CASCADE)
-    image = models.ForeignKey('Image', on_delete=models.CASCADE)
-
-#------------------------------------------------------------------------------------------------------------
-
 class Project(models.Model):
     nom = models.CharField(max_length=30)
     idCreateur = models.ForeignKey('User', on_delete=models.SET_NULL, null=True)
@@ -51,9 +32,8 @@ class Project(models.Model):
     budgetActuel = models.IntegerField(default=0)
     budgetCible = models.IntegerField(default=0)
     description = models.CharField(max_length=255, default="")
-    listeImage = models.ManyToManyField(Image,through='EstLiee',through_fields=('projet', 'image'))
     datePublication = models.DateTimeField(default=timezone.now,verbose_name="Date de publication")
-    project_Main_Image = models.ImageField(upload_to='images/')
+    project_Main_Image = models.ImageField(upload_to='images/', null=True)
     
     def __str__(self):
         return self.nom
@@ -127,10 +107,10 @@ class ConnexionForm(forms.Form):
     password = forms.CharField(max_length=40, label='Password', widget=forms.PasswordInput)
 
 class ExpertForm(forms.Form):
-    noteBudget = forms.IntegerField(min_value=0, max_value=10)
-    noteFaisabilite = forms.IntegerField(min_value=0, max_value=10)
-    noteUtilite = forms.IntegerField(min_value=0, max_value=10)
-    commentaire = forms.CharField(max_length=255, widget=forms.Textarea, required=False)
+    noteBudget = forms.IntegerField(min_value=0, max_value=10, label='Budget')
+    noteFaisabilite = forms.IntegerField(min_value=0, max_value=10, label='Faisabilite')
+    noteUtilite = forms.IntegerField(min_value=0, max_value=10, label='Utility')
+    commentaire = forms.CharField(max_length=255, widget=forms.Textarea, required=False, label='Comment')
 
 class ProjectForm(forms.Form):
 	nom = forms.CharField(max_length=30, label='Name')
@@ -143,9 +123,9 @@ class RechercheForm(forms.Form):
 	nom_createur = forms.CharField(max_length=30, label='nom du créateur', required=False)
 	nom_project = forms.CharField(max_length=30, label='nom du project', required=False)
 	budget_min = forms.IntegerField(label='Budget minimum', required=False)
-	budget_max = forms.IntegerField(label='Budget Maximus Decimus Meridius', required=False)
+	budget_max = forms.IntegerField(label='Budget Maximum', required=False)
 	note_moyenne_min = forms.IntegerField(label='Moyenne des notes minimum', required=False)
-	note_moyenne_max = forms.IntegerField(label='Moyenne des notes Maximus Decimus Meridius', required=False)
+	note_moyenne_max = forms.IntegerField(label='Moyenne des notes Maximum', required=False)
 
 #Test image
 #class ImageProject(models.Model):
