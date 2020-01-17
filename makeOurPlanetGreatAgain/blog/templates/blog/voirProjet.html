@@ -52,9 +52,14 @@
             <div class="col">
                 <h1 class="text-center">{{ project.nom }}</h1>
                 {% if project.idCreateur.id == request.user.id %}
-                    <p><a class="fa fa-image" href="{% url 'pageTestImage' id=project.id %}"> Upload a picture</a></p>
+                    <span class="fa fa-image"> Upload a picture</span></br>
+                    <form method = 'post' enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ formImage|crispy }}
+                        <button type="submit" class="form-button btn btn-success">Upload</button>
+                    </form>
                 {% endif %}
-                <div class="border-top border-bottom">
+                <div class="border-top border-bottom mt-2">
                     Creator : <a href="{% url 'userId' id=project.idCreateur.id %}">{{ project.idCreateur }}</a></br>
                     Description : {{ project.description }}</br>
                     Budget needed : {{ project.budgetActuel }}</br>

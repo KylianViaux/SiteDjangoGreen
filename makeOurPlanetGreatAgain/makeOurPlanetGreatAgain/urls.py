@@ -31,6 +31,5 @@ urlpatterns = [
     path('rechercher', views.rechercher, name='rechercher'),
     path('contact', views.contact, name='contact'),
     path('updateKarma/<int:idProject>-<int:idEvaluateur>-<int:idEvalue>-<int:note>', views.updateKarma, name='updateKarma'),
-    path('mentionsLegales', views.mentionsLegales, name='mentionsLegales'),
-    path ('pageTestImage/<int:id>', views.pageTestImage, name='pageTestImage')
+    path('mentionsLegales', views.mentionsLegales, name='mentionsLegales')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

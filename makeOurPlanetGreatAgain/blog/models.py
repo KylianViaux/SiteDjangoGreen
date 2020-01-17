@@ -137,3 +137,6 @@ class ImageProjectForm(forms.ModelForm):
         model = Project	
         fields = ['project_Main_Image']
 
+    def __init__(self, *args, **kwargs):
+            super(ImageProjectForm, self).__init__(*args, **kwargs)
+            self.fields['project_Main_Image'].label = ""

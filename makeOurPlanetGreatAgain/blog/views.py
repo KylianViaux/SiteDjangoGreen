@@ -105,22 +105,7 @@ def voirUtilisateur(request, id):
     projects = Project.objects.filter(idCreateur = user)
 
     return render(request, 'blog/voirUtilisateur.html', locals())
-    
-    
-#--------------------------------------------------------------------------------------------------------------------------
 
-def pageTestImage(request, id):
-
-    if request.method == 'POST':
-        form = ImageProjectForm(request.POST, request.FILES)
-        if form.is_valid():
-            pro = Project.objects.get(id=id)
-            pro.project_Main_Image = form.cleaned_data['project_Main_Image']
-            pro.save()
-            return redirect('pageTestImage', id) 
-    else:
-        form = ImageProjectForm()
-        return render(request, 'blog/pageTestImage.html', locals())
 
 #--------------------------------------------------------------------------------------------------------------------------
 
@@ -155,7 +140,24 @@ def voirProjet(request, id):
     # le formulaire permettant de noter ce projet sera affiché
     form = ""
     hasEvaluated = False
+
+    # Si un utilisateur est authentifier alors on affiche les formulaires qui correspondent a son status
     if request.user.is_authenticated:
+
+        # Formulaire permettant a l'utilisateur proprietaire du projet d'upload une image
+        if request.user.id == project.idCreateur.id:
+            if request.method == 'POST':
+                    formImage = ImageProjectForm(request.POST, request.FILES)
+                    if formImage.is_valid():
+                        pro = Project.objects.get(id=id)
+                        pro.project_Main_Image = formImage.cleaned_data['project_Main_Image']
+                        pro.save()
+                        return redirect('projectId', id = id)
+            else:
+               formImage = ImageProjectForm()
+
+        # Formulaire permettant a un expert d'evaluer un projet si celui-ci a suffisament de karma
+        # et qu'il n'a pas encore évalué le projet (une evaluation est unique et non modifiable)
         if request.user.isExpert:
             if not ExpertNote.objects.filter(idProject=id, idExpert=request.user.id).exists():
                 if request.method == 'POST':
@@ -179,7 +181,7 @@ def voirProjet(request, id):
                 else:
                     form = ExpertForm()
             else:
-                #l'expert a déjà noté ce projet
+                # L'expert a déjà évalué ce projet
                 hasEvaluated = True
 
     return render(request, 'blog/voirProjet.html', locals())
