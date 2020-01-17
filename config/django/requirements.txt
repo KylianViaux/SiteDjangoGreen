@@ -4,3 +4,4 @@ django-environ
 django-bootstrap4
 django-crispy-forms
 django-mathfilters
+pillow

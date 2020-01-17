@@ -82,7 +82,7 @@ CREATE TABLE `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,36 +91,8 @@ CREATE TABLE `auth_permission` (
 
 LOCK TABLES `auth_permission` WRITE;
 /*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
-INSERT INTO `auth_permission` VALUES (1,'Can add log entry',1,'add_logentry'),(2,'Can change log entry',1,'change_logentry'),(3,'Can delete log entry',1,'delete_logentry'),(4,'Can view log entry',1,'view_logentry'),(5,'Can add permission',2,'add_permission'),(6,'Can change permission',2,'change_permission'),(7,'Can delete permission',2,'delete_permission'),(8,'Can view permission',2,'view_permission'),(9,'Can add group',3,'add_group'),(10,'Can change group',3,'change_group'),(11,'Can delete group',3,'delete_group'),(12,'Can view group',3,'view_group'),(13,'Can add content type',4,'add_contenttype'),(14,'Can change content type',4,'change_contenttype'),(15,'Can delete content type',4,'delete_contenttype'),(16,'Can view content type',4,'view_contenttype'),(17,'Can add session',5,'add_session'),(18,'Can change session',5,'change_session'),(19,'Can delete session',5,'delete_session'),(20,'Can view session',5,'view_session'),(21,'Can add Utilisateur',9,'add_user'),(22,'Can change Utilisateur',9,'change_user'),(23,'Can delete Utilisateur',9,'delete_user'),(24,'Can view Utilisateur',9,'view_user'),(25,'Can add image',10,'add_image'),(26,'Can change image',10,'change_image'),(27,'Can delete image',10,'delete_image'),(28,'Can view image',10,'view_image'),(29,'Can add investor link',8,'add_investorlink'),(30,'Can change investor link',8,'change_investorlink'),(31,'Can delete investor link',8,'delete_investorlink'),(32,'Can view investor link',8,'view_investorlink'),(33,'Can add Projet',7,'add_project'),(34,'Can change Projet',7,'change_project'),(35,'Can delete Projet',7,'delete_project'),(36,'Can view Projet',7,'view_project'),(37,'Evaluer un projet',7,'evaluate_project'),(38,'Can add expert note',11,'add_expertnote'),(39,'Can change expert note',11,'change_expertnote'),(40,'Can delete expert note',11,'delete_expertnote'),(41,'Can view expert note',11,'view_expertnote'),(42,'Can add est liee',6,'add_estliee'),(43,'Can change est liee',6,'change_estliee'),(44,'Can delete est liee',6,'delete_estliee'),(45,'Can view est liee',6,'view_estliee');
+INSERT INTO `auth_permission` VALUES (1,'Can add log entry',1,'add_logentry'),(2,'Can change log entry',1,'change_logentry'),(3,'Can delete log entry',1,'delete_logentry'),(4,'Can view log entry',1,'view_logentry'),(5,'Can add permission',3,'add_permission'),(6,'Can change permission',3,'change_permission'),(7,'Can delete permission',3,'delete_permission'),(8,'Can view permission',3,'view_permission'),(9,'Can add group',2,'add_group'),(10,'Can change group',2,'change_group'),(11,'Can delete group',2,'delete_group'),(12,'Can view group',2,'view_group'),(13,'Can add content type',4,'add_contenttype'),(14,'Can change content type',4,'change_contenttype'),(15,'Can delete content type',4,'delete_contenttype'),(16,'Can view content type',4,'view_contenttype'),(17,'Can add session',5,'add_session'),(18,'Can change session',5,'change_session'),(19,'Can delete session',5,'delete_session'),(20,'Can view session',5,'view_session'),(21,'Can add investor link',8,'add_investorlink'),(22,'Can change investor link',8,'change_investorlink'),(23,'Can delete investor link',8,'delete_investorlink'),(24,'Can view investor link',8,'view_investorlink'),(25,'Can add expert note',9,'add_expertnote'),(26,'Can change expert note',9,'change_expertnote'),(27,'Can delete expert note',9,'delete_expertnote'),(28,'Can view expert note',9,'view_expertnote'),(29,'Can add Projet',10,'add_project'),(30,'Can change Projet',10,'change_project'),(31,'Can delete Projet',10,'delete_project'),(32,'Can view Projet',10,'view_project'),(33,'Evaluer un projet',10,'evaluate_project'),(34,'Can add karma check',7,'add_karmacheck'),(35,'Can change karma check',7,'change_karmacheck'),(36,'Can delete karma check',7,'delete_karmacheck'),(37,'Can view karma check',7,'view_karmacheck'),(38,'Can add Utilisateur',6,'add_user'),(39,'Can change Utilisateur',6,'change_user'),(40,'Can delete Utilisateur',6,'delete_user'),(41,'Can view Utilisateur',6,'view_user');
 /*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `blog_estliee`
---
-
-DROP TABLE IF EXISTS `blog_estliee`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `blog_estliee` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `image_id` int(11) NOT NULL,
-  `projet_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `blog_estliee_image_id_9634b4c6_fk_blog_image_id` (`image_id`),
-  KEY `blog_estliee_projet_id_85eb86b3_fk_blog_project_id` (`projet_id`),
-  CONSTRAINT `blog_estliee_image_id_9634b4c6_fk_blog_image_id` FOREIGN KEY (`image_id`) REFERENCES `blog_image` (`id`),
-  CONSTRAINT `blog_estliee_projet_id_85eb86b3_fk_blog_project_id` FOREIGN KEY (`projet_id`) REFERENCES `blog_project` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `blog_estliee`
---
-
-LOCK TABLES `blog_estliee` WRITE;
-/*!40000 ALTER TABLE `blog_estliee` DISABLE KEYS */;
-/*!40000 ALTER TABLE `blog_estliee` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -157,31 +129,6 @@ LOCK TABLES `blog_expertnote` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `blog_image`
---
-
-DROP TABLE IF EXISTS `blog_image`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `blog_image` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(30) NOT NULL,
-  `copyright` smallint(5) unsigned NOT NULL,
-  `description` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `blog_image`
---
-
-LOCK TABLES `blog_image` WRITE;
-/*!40000 ALTER TABLE `blog_image` DISABLE KEYS */;
-/*!40000 ALTER TABLE `blog_image` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `blog_investorlink`
 --
 
@@ -200,7 +147,7 @@ CREATE TABLE `blog_investorlink` (
   KEY `blog_investorlink_idProject_id_bfe1f9c7_fk_blog_project_id` (`idProject_id`),
   CONSTRAINT `blog_investorlink_idInvestisseur_id_8b862354_fk_blog_user_id` FOREIGN KEY (`idInvestisseur_id`) REFERENCES `blog_user` (`id`),
   CONSTRAINT `blog_investorlink_idProject_id_bfe1f9c7_fk_blog_project_id` FOREIGN KEY (`idProject_id`) REFERENCES `blog_project` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,7 +156,41 @@ CREATE TABLE `blog_investorlink` (
 
 LOCK TABLES `blog_investorlink` WRITE;
 /*!40000 ALTER TABLE `blog_investorlink` DISABLE KEYS */;
+INSERT INTO `blog_investorlink` VALUES (1,25,25,'2020-01-17 19:26:12.785450',4,1);
 /*!40000 ALTER TABLE `blog_investorlink` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `blog_karmacheck`
+--
+
+DROP TABLE IF EXISTS `blog_karmacheck`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `blog_karmacheck` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `evaluation` int(11) NOT NULL,
+  `oldEvaluation` int(11) NOT NULL,
+  `ExpertEvaluateur_id` int(11) DEFAULT NULL,
+  `ExpertEvalue_id` int(11) DEFAULT NULL,
+  `idProject_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `blog_karmacheck_ExpertEvaluateur_id_1c97e568_fk_blog_user_id` (`ExpertEvaluateur_id`),
+  KEY `blog_karmacheck_ExpertEvalue_id_88bd4360_fk_blog_user_id` (`ExpertEvalue_id`),
+  KEY `blog_karmacheck_idProject_id_8b9ff3a6_fk_blog_project_id` (`idProject_id`),
+  CONSTRAINT `blog_karmacheck_ExpertEvaluateur_id_1c97e568_fk_blog_user_id` FOREIGN KEY (`ExpertEvaluateur_id`) REFERENCES `blog_user` (`id`),
+  CONSTRAINT `blog_karmacheck_ExpertEvalue_id_88bd4360_fk_blog_user_id` FOREIGN KEY (`ExpertEvalue_id`) REFERENCES `blog_user` (`id`),
+  CONSTRAINT `blog_karmacheck_idProject_id_8b9ff3a6_fk_blog_project_id` FOREIGN KEY (`idProject_id`) REFERENCES `blog_project` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `blog_karmacheck`
+--
+
+LOCK TABLES `blog_karmacheck` WRITE;
+/*!40000 ALTER TABLE `blog_karmacheck` DISABLE KEYS */;
+/*!40000 ALTER TABLE `blog_karmacheck` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -222,15 +203,17 @@ DROP TABLE IF EXISTS `blog_project`;
 CREATE TABLE `blog_project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(30) NOT NULL,
+  `difficulte` int(11) NOT NULL,
   `budgetActuel` int(11) NOT NULL,
   `budgetCible` int(11) NOT NULL,
   `description` varchar(255) NOT NULL,
   `datePublication` datetime(6) NOT NULL,
+  `project_Main_Image` varchar(100) DEFAULT NULL,
   `idCreateur_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `blog_project_idCreateur_id_9c2de545_fk_blog_user_id` (`idCreateur_id`),
   CONSTRAINT `blog_project_idCreateur_id_9c2de545_fk_blog_user_id` FOREIGN KEY (`idCreateur_id`) REFERENCES `blog_user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -239,6 +222,7 @@ CREATE TABLE `blog_project` (
 
 LOCK TABLES `blog_project` WRITE;
 /*!40000 ALTER TABLE `blog_project` DISABLE KEYS */;
+INSERT INTO `blog_project` VALUES (1,'project1',1,25,1000,'','2020-01-17 19:25:33.609530','images/serveimage_cwsKNRL.jpeg',4);
 /*!40000 ALTER TABLE `blog_project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -259,7 +243,6 @@ CREATE TABLE `blog_user` (
   `is_active` tinyint(1) NOT NULL,
   `date_joined` datetime(6) NOT NULL,
   `username` varchar(30) NOT NULL,
-  `slug` varchar(100) NOT NULL,
   `password` varchar(128) NOT NULL,
   `email` varchar(50) NOT NULL,
   `profil` longtext,
@@ -267,9 +250,8 @@ CREATE TABLE `blog_user` (
   `isExpert` tinyint(1) NOT NULL,
   `karma` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
-  KEY `blog_user_slug_591065d5` (`slug`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -278,7 +260,7 @@ CREATE TABLE `blog_user` (
 
 LOCK TABLES `blog_user` WRITE;
 /*!40000 ALTER TABLE `blog_user` DISABLE KEYS */;
-INSERT INTO `blog_user` VALUES (1,NULL,1,'','',1,1,'2020-01-11 13:18:42.977218','admin','admin','pbkdf2_sha256$150000$h3SLWjkQzulp$TLqWXkfbn4DBEG1AlyfqcKVYNg9Kt9gfZMAaVD8RVnE=','admin@minda.com',NULL,'2020-01-11 13:18:42.977269',1,0),(2,'2020-01-11 13:22:57.818252',0,'','',0,1,'2020-01-11 13:22:57.722983','uti','uti','pbkdf2_sha256$150000$Ify3o7EjzbW3$JQfbW/po6BZkiDfQZz5gDOnvXC1PSARXh7sgzRPsEfA=','uti@itu.com','','2020-01-11 13:22:57.723000',0,0),(3,'2020-01-11 13:23:29.092923',0,'','',0,1,'2020-01-11 13:23:29.000351','expert','expert','pbkdf2_sha256$150000$tZ8oYGA1CLDn$caVoBQEL4AQQ9zprajHxscJl9hvleAFzMeF+eZ0VGUk=','expert@trepxe.com','','2020-01-11 13:23:29.000366',1,0);
+INSERT INTO `blog_user` VALUES (1,'2020-01-17 20:10:10.893666',0,'','',0,1,'2020-01-17 19:06:01.706949','admin','pbkdf2_sha256$150000$z4sWaJTarxiR$ApSNiz1tTyVClf9/19bXcesgItAb80r97nc/URlfRUY=','admin@admin.com','','2020-01-17 19:06:01.706961',0,0),(2,'2020-01-17 20:08:29.763242',0,'','',0,1,'2020-01-17 19:13:52.615234','expert','pbkdf2_sha256$150000$IFfuisE2fmji$PE2nJEyW1hnFoeP6zDJoHyD52+/2lTW4XnHU1r9P/6g=','expert1@expert1.com','','2020-01-17 19:13:52.615247',1,110),(3,'2020-01-17 19:15:52.226817',0,'','',0,1,'2020-01-17 19:15:52.130430','expert2','pbkdf2_sha256$150000$CDBOl0p0IXqX$rXDfRWLxhoMu3aTiZEwQNG+Tg71YZ1xqup8dTYgckSU=','expert2@expert2.com','','2020-01-17 19:15:52.130443',1,110),(4,'2020-01-17 20:36:57.751126',0,'','',0,1,'2020-01-17 19:17:41.927338','test','pbkdf2_sha256$150000$LT1jolHZp87N$8oU+3uFfkiexLns0QpKfbRPX3dcn0QIDxJTTU6sd2fk=','test@test.Com','','2020-01-17 19:17:41.927356',1,110),(5,NULL,0,'','',0,1,'2020-01-17 20:36:07.968253','test2','pbkdf2_sha256$150000$pp7fbi5m4obc$iNtMlfyHsVCZRuYGpjT82lLuoynqxI3n+7blT/+M3AM=','test2@test2.com','','2020-01-17 20:36:07.968265',1,110);
 /*!40000 ALTER TABLE `blog_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -384,7 +366,7 @@ CREATE TABLE `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -393,7 +375,7 @@ CREATE TABLE `django_content_type` (
 
 LOCK TABLES `django_content_type` WRITE;
 /*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
-INSERT INTO `django_content_type` VALUES (1,'admin','logentry'),(3,'auth','group'),(2,'auth','permission'),(6,'blog','estliee'),(11,'blog','expertnote'),(10,'blog','image'),(8,'blog','investorlink'),(7,'blog','project'),(9,'blog','user'),(4,'contenttypes','contenttype'),(5,'sessions','session');
+INSERT INTO `django_content_type` VALUES (1,'admin','logentry'),(2,'auth','group'),(3,'auth','permission'),(9,'blog','expertnote'),(8,'blog','investorlink'),(7,'blog','karmacheck'),(10,'blog','project'),(6,'blog','user'),(4,'contenttypes','contenttype'),(5,'sessions','session');
 /*!40000 ALTER TABLE `django_content_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -410,7 +392,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -419,7 +401,7 @@ CREATE TABLE `django_migrations` (
 
 LOCK TABLES `django_migrations` WRITE;
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
-INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2020-01-11 13:17:36.518717'),(2,'contenttypes','0002_remove_content_type_name','2020-01-11 13:17:36.574052'),(3,'auth','0001_initial','2020-01-11 13:17:36.652304'),(4,'auth','0002_alter_permission_name_max_length','2020-01-11 13:17:36.782943'),(5,'auth','0003_alter_user_email_max_length','2020-01-11 13:17:36.797408'),(6,'auth','0004_alter_user_username_opts','2020-01-11 13:17:36.813265'),(7,'auth','0005_alter_user_last_login_null','2020-01-11 13:17:36.823155'),(8,'auth','0006_require_contenttypes_0002','2020-01-11 13:17:36.825610'),(9,'auth','0007_alter_validators_add_error_messages','2020-01-11 13:17:36.832324'),(10,'auth','0008_alter_user_username_max_length','2020-01-11 13:17:36.838103'),(11,'auth','0009_alter_user_last_name_max_length','2020-01-11 13:17:36.844477'),(12,'auth','0010_alter_group_name_max_length','2020-01-11 13:17:36.851705'),(13,'auth','0011_update_proxy_permissions','2020-01-11 13:17:36.855897'),(14,'blog','0001_initial','2020-01-11 13:17:37.142407'),(15,'admin','0001_initial','2020-01-11 13:17:37.579757'),(16,'admin','0002_logentry_remove_auto_add','2020-01-11 13:17:37.672152'),(17,'admin','0003_logentry_add_action_flag_choices','2020-01-11 13:17:37.690633'),(18,'sessions','0001_initial','2020-01-11 13:17:37.709099');
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2020-01-17 18:59:52.321436'),(2,'contenttypes','0002_remove_content_type_name','2020-01-17 18:59:52.368069'),(3,'auth','0001_initial','2020-01-17 18:59:52.456605'),(4,'auth','0002_alter_permission_name_max_length','2020-01-17 18:59:52.607340'),(5,'auth','0003_alter_user_email_max_length','2020-01-17 18:59:52.627400'),(6,'auth','0004_alter_user_username_opts','2020-01-17 18:59:52.640428'),(7,'auth','0005_alter_user_last_login_null','2020-01-17 18:59:52.648319'),(8,'auth','0006_require_contenttypes_0002','2020-01-17 18:59:52.650560'),(9,'auth','0007_alter_validators_add_error_messages','2020-01-17 18:59:52.657162'),(10,'auth','0008_alter_user_username_max_length','2020-01-17 18:59:52.662737'),(11,'auth','0009_alter_user_last_name_max_length','2020-01-17 18:59:52.667605'),(12,'auth','0010_alter_group_name_max_length','2020-01-17 18:59:52.674819'),(13,'auth','0011_update_proxy_permissions','2020-01-17 18:59:52.679069'),(14,'blog','0001_initial','2020-01-17 18:59:53.017994'),(15,'admin','0001_initial','2020-01-17 18:59:53.573394'),(16,'admin','0002_logentry_remove_auto_add','2020-01-17 18:59:53.672187'),(17,'admin','0003_logentry_add_action_flag_choices','2020-01-17 18:59:53.689094'),(18,'blog','0002_auto_20200117_1344','2020-01-17 18:59:53.721165'),(19,'blog','0003_auto_20200117_1353','2020-01-17 18:59:53.760560'),(20,'sessions','0001_initial','2020-01-17 18:59:53.787676');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -445,7 +427,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('uda9ifuxmif191gzhp0x345ei1l2c7x0','M2UzZDRlNTg2MDA3MzkyZjI2NjNhOWRhZjA4NGVlMzI1YTU0NzAxOTp7Il9hdXRoX3VzZXJfaWQiOiIzIiwiX2F1dGhfdXNlcl9oYXNoIjoiM2I4NmQ5ZjYzYThmYmQwMzI5Yzc3MmE4ZjhlMmUyMzM1NDdhZjIwYSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=','2020-01-25 13:23:29.098605');
+INSERT INTO `django_session` VALUES ('s4fjghhpeq55bbf0kib71a57f1y15sdg','MmM0YzgyZTgyY2M0NjI0Mjc5NGJkZjdjZmQ2ZjhmMzU2MzA5NzhkNDp7Il9hdXRoX3VzZXJfaWQiOiI0IiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI0NmZlYTlhNGQ5YWQxMDc3N2FmMDhmNmM4ODJhMzc1Y2NlNDlkMWEzIn0=','2020-01-31 20:36:57.763224');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -458,4 +440,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-11 14:24:10
+-- Dump completed on 2020-01-17 23:03:14
