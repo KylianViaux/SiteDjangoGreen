@@ -1,7 +1,7 @@
 Pour lancer le site AVEC Docker, les commandes à disposition sont:
-      ./run.sh build    -- pour créer les containers (nécessaire lors de la première utilisation)
-      ./run.sh start    -- pour démarrer les containers 
-      ./run.sh stop     -- pour stopper les containers 
+      ./run build    -- pour créer les containers (nécessaire lors de la première utilisation)
+      ./run start    -- pour démarrer les containers 
+      ./run stop     -- pour stopper les containers 
 
       Si l'étape précedente à été effectuée, accéder à l'adresse suivante
       http://localhost:9000/ afin de vérifier l'état des containers
