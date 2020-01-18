@@ -1,38 +1,24 @@
-/!\ RAF :
-      - finir le style sur toutes les pages 
-      - liste de tous les projets + fonction de recherche avec sur rechercher.html
-      - définir la partie sur le karma, actuellement n'importe quel expert peut noter un projet
-      - mettre des trucs dans les mentions legales 
-      - ajouter des images pour les projets 
+Pour lancer le site AVEC Docker, les commandes à disposition sont:
+      ./run.sh build    -- pour créer les containers (nécessaire lors de la première utilisation)
+      ./run.sh start    -- pour démarrer les containers 
+      ./run.sh stop     -- pour stopper les containers 
 
-
-0     Pour lancer le site AVEC Docker, les commandes à disposition sont:
-      ./run.sh build    -- pour créer les containeurs (nécessaire lors de la première utilisation)
-      ./run.sh start    -- pour démarrer les containeusr 
-      ./run.sh stop     -- pour stopper les containeurs 
-
-0.5   Si l'étape précedente à été effectuée, acceder à l'adresse suivante
+      Si l'étape précedente à été effectuée, accéder à l'adresse suivante
       http://localhost:9000/ afin de vérifier l'état des containers
-      Si il ont tous démarrés acceder à l'adresse suivante (sinon voir les logs)
-      http://localhost:8000/accueil
+      Si il ont tous démarrés accéder à l'adresse suivante (sinon voir les logs)
+      http://localhost:8000/
 
-1     Pour lancer le site SANS docker 
+Pour lancer le site SANS docker 
       - Créer une base de données mysql, exemple : mysql create database database_name;
       - Importer le fichier dump.sql qui se trouve dans config/dump/dump.sql dans votre base de données avec la commande
             mysql -u user -p database_name < dump.sql
-      - Configurer le fichier .env qui se trouve à l'emplacement /makeOurPlanetGreatAgain/makeOurPlanetGreatAgain/ en fonction de la base de données 
+      - Configurer le fichier .env qui se trouve à l'emplacement /makeOurPlanetGreatAgain/makeOurPlanetGreatAgain/  
       - Lancer un environnement(**) Python et se mettre dans le repertoire du manage.py et lancer la commande
             python manage.py runserver 0.0.0.0:8000
 
       (**) environnement Python 
       pour l'environnement Python lancer les commandes 
             sudo apt-get install python-virtualenv python-pip libmysqlclient-dev python-dev
-            virtualenv tp_django -p python3
-            source tp_django/bin/activate
+            virtualenv env_django -p python3
+            source env_django/bin/activate
             pip install -r config/django/requirements.txt
-            
-
-      Faire un dump de la base de données depuis le container
-      - Se mettre dans le repertoire SiteDjangoGreen/config/dump
-      - lancer la commande :
-            docker exec mysql /usr/bin/mysqldump -u root --password=password monblog  > dump.sql
