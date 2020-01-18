@@ -104,24 +104,28 @@
             {% if user.is_authenticated %}
                 <!-- Si l'utilisateur est un expert -->
                 {% if user.isExpert  %}
-                    <!-- Si l'expert a suffisament de karma pour evaluer ce projet -->
-                    {% if user.karma >= project.difficulte|mul:100 %}
-                        <!-- Si cet expert n'as pas encore évalué le projet -->
-                        {% if not hasEvaluated %}
-                            <div class="col mt-3">
-                                <h1 class="text-center"> Evaluate project</h1>
-
-                                <form method="post" enctype="multipart/form-data" novalidate>
-                                    {% csrf_token %}
-                                    {{ form|crispy  }}
-                                    <button type="submit" class="form-button btn btn-success">Submit</button>
-                                </form>
-                            </div>
+                    <!-- un expert createur ne peut pas evaluer son propre projet-->
+                    {% if user.id != project.idCreateur.id %}
+                        <!-- Si l'expert a suffisament de karma pour evaluer ce projet -->
+                        {% if user.karma >= project.difficulte|mul:100 %}
+                            <!-- Si cet expert n'as pas encore évalué le projet -->
+                            {% if not hasEvaluated %}
+                                <div class="col mt-3">
+                                    <h1 class="text-center"> Evaluate project</h1>
+                                    <form method="post" enctype="multipart/form-data" novalidate>
+                                        {% csrf_token %}
+                                        {{ form|crispy  }}
+                                        <button type="submit" class="form-button btn btn-success">Submit</button>
+                                    </form>
+                                </div>
+                            {% else %}
+                                <div class="col mt-4"><h5 class="text-center text-warning">You have already evaluated this project</h5></div>
+                            {% endif %}
                         {% else %}
-                            <div class="col mt-4"><h5 class="text-center text-warning">You have already evaluated this project</h5></div>
+                            <div class="col mt-4"><h5 class="text-center text-danger">Not enough karma to evaluate this project</h5></div>
                         {% endif %}
                     {% else %}
-                        <div class="col mt-4"><h5 class="text-center text-danger">Not enough karma to evaluate this project</h5></div>
+                        <div class="col mt-4"><h5 class="text-center text-danger">You cannot evaluate your own project</h5></div>
                     {% endif %}
                 {% endif %}
             {% endif %}
