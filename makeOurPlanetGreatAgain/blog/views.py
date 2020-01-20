@@ -126,6 +126,19 @@ def voirProjet(request, id):
     if avg_noteBudget is not None:
         moyenne = round((avg_noteBudget+avg_noteFaisabilite+avg_noteUtilite)/3,2)
 
+
+    # Récupération des commentaires sur le projet pour les afficher
+    expertNotes = ExpertNote.objects.filter(idProject=project.id).select_related('idExpert')
+    comments = []
+    for expertNote in expertNotes:
+        array = {}
+        array['idExpert'] = expertNote.idExpert.id
+        array['karma'] = expertNote.idExpert.karma
+        array['expertName'] = expertNote.idExpert.username
+        array['note'] = expertNote.noteGlobale
+        array['comment'] = expertNote.commentaire
+        comments.append(array)
+
     # Renvoi la liste des 5 plus gros contributeurs ainsi que leur donation
     contributions = []
     objects = InvestorLink.objects.filter(idProject=project).select_related('idInvestisseur').order_by('-contribution')[0:5]
