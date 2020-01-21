@@ -1,0 +1,61 @@
+version: "2.0"
+
+services:
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    command: -H unix:///var/run/docker.sock
+    restart: always
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  mysql:
+    image: mysql/mysql-server
+    container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    env_file:
+      - config/.env
+    volumes:
+      - ./config/dump/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - django_network
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+      - 8000:8000
+    volumes:
+      - ./makeOurPlanetGreatAgain:/src
+      - ./config/nginx:/etc/nginx/conf.d
+    depends_on:
+      - django
+    networks:
+      - django_network
+
+  django:
+    image: django_server
+    container_name: django
+    command: python manage.py runserver 0.0.0.0:8000
+    expose:
+      - 8000
+    build:
+      context: .
+      dockerfile: config/django/Dockerfile
+    stdin_open: true
+    tty: true
+    depends_on:
+      - mysql
+    env_file:
+      - config/.env
+    volumes:
+      - ./makeOurPlanetGreatAgain:/mopga
+    networks:
+      - django_network
+
+networks:
+  django_network:
+    driver: bridge

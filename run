@@ -1,0 +1,38 @@
+#!/bin/bash
+
+if [ "$1" == "build" ]; then
+  echo "starting portainer..."
+  docker-compose up -d portainer
+
+  echo "starting mysql..."
+  docker-compose up -d mysql
+
+  mysqlStatus="null"
+  while [ "$mysqlStatus" != "healthy" ]; do
+    mysqlStatus="$(docker inspect --format "{{ .State.Health.Status }}" mysql)"
+    echo "mysql state : "$mysqlStatus"..."
+    sleep 5
+  done
+
+  echo "starting django..."
+  docker-compose up -d django
+
+  echo "starting nginx..."
+  docker-compose up -d nginx
+
+elif [ "$1" == "stop" ]; then
+  docker-compose stop
+
+elif [ "$1" == "start" ]; then
+  docker-compose start
+
+elif [ "$1" == "help" ]; then
+  echo "--- manuel d'utilisation ---"
+  echo "./run.sh build -- build the server"
+  echo "./run.sh start -- start the server"
+  echo "./run.sh stop -- stop the server"
+
+else
+  echo "commande inconnue"
+
+fi

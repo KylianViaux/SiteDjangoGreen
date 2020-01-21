@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/javascript.util/0.12.12/javascript.util.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+
+<!-- header row -->
+<header>
+    <div class="row bg-light ml-3 mr-3 header">
+        <div class="col col-md-auto">
+            <img src="{% static 'images/logo.png' %}" height="100" class="d-inline-block align-middle mr-2">
+            <span class="text-uppercase font-weight-bold">MaKe Our Planet Great Again</span>
+        </div>
+        <div class="col"></div>
+        <div class="col col-md-auto">
+            {% if connexion == 'true' %}
+                <p>Welcome {{ user.username }}</p>
+                <div >
+                    <p class="fa fa-plus-square-o"><a href="{% url 'nouveauProject' %}"> Create a new project</a></p></br>
+                    <p class="fa fa-sign-out"><a href="{% url 'deconnexion' %}"> Sign out</a></p>
+                </div>
+            {% else %}
+                {% if connexion == 'false' %}
+                <p>identifiant ou mot de passe incorrect</p>
+                {% endif %}
+                <form class="form-control-sm" method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    {{ form }}
+                    <button type="submit" class="form-button btn btn-success">Submit</button>
+                </form>
+                <p class="text-right">No account yet ? <a href="{% url 'inscription' %}">Join Us !</a></p>
+            {% endif %}
+        </div>
+    </div>
+</header>
+<!-- //header row -->
+
+
+<body>
+    <div class="row ml-5 mr-5 mt-5">
+        <!-- //carousel col -->
+        <div class="col-md-6 mt-md-0 mt-3">
+            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="5"></li>
+                </ol>
+                <div class="carousel-inner" role="listbox">
+                    <div class="carousel-item active">
+                        <img class="d-block img-fluid" src="{% static 'images/cover4.jpg' %}" style="min-height:500px;max-height:500px;min-width:100%;max-width:100%">
+                        <div class="carousel-caption d-none d-md-block" style="right: 0%;left: 0%;background: rgba(0, 0, 0, 0.5);color: #f1f1f1;">
+                            <h2>Last 5 Projects</h2>
+                        </div>
+                    </div>
+                    {% for project in projects %}
+                    <div class="carousel-item">
+                        {% if project.project_Main_Image|length == 0  %}
+                            <a href="{% url 'projectId' id=project.id %}"><img class="d-block img-fluid" src="{% static 'images/cover.jpg' %}" style="min-height:500px;max-height:500px;min-width:100%;max-width:100%"></a>
+                        {% else %}
+                            <a href="{% url 'projectId' id=project.id %}"><img class="d-block img-fluid" src="{{ project.project_Main_Image.url }}" style="min-height:500px;max-height:500px;min-width:100%;max-width:100%"/></a>
+                        {% endif %}
+                        <div class="carousel-caption d-none d-md-block" style="right: 0%;left: 0%;background: rgba(0, 0, 0, 0.5);color: #f1f1f1;">
+                            <h2><a style="color:#f1f1f1" href="{% url 'projectId' id=project.id %}"> {{ project.nom }} </a></h2>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true" style="background-color:rgba(0, 0, 0, 0.5)"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true" style="background-color:rgba(0, 0, 0, 0.5)"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+        <!-- //carousel col -->
+
+        <hr class="clearfix w-100 d-md-none pb-3">
+
+        <!-- project col -->
+        <div class="col">
+            <p class="fa fa-search"><a href="{% url 'rechercher' %}"> looking for another project ?</a></p>
+            <h5>Last contribution</h5>
+            <div class="row mb-4 ml-1">
+                {% if last_contributed_project != -1  %}
+                    {% if last_contributed_project.project_Main_Image|length == 0  %}
+                        <img style="float:left;min-height:100px;max-height:100px;min-width:50%;max-width:50%" src="{% static 'images/cover.jpg' %}">
+                    {% else %}
+                        <img style="float:left;min-height:100px;max-height:100px;min-width:50%;max-width:50%" src="{{ last_contributed_project.project_Main_Image.url }}">
+                    {% endif %}
+                    <div class="ml-2">
+                        <h4><a class="text-warning" href="{% url 'projectId' id=last_contributed_project.id %}"> {{ last_contributed_project.nom }} </a></h4>
+                        <p> Funded : {{ last_contributed_project.budgetActuel }} / {{ last_contributed_project.budgetCible }}</br>
+                            Creator :<a href="{% url 'userId' id=last_contributed_project.idCreateur.id %}"> {{ last_contributed_project.idCreateur }}</a>
+                        </p>
+                    </div>
+                {% else %}
+                <p>no project contributed yet</p>
+                {% endif %}
+            </div>
+            <h5>Expert comments</h5>
+            <ul class="list-group" style="overflow: auto;height: 280px">
+                {% for values in comments %}
+                    <li class="list-group-item overflow-auto">
+                        {{ values.expertName }} |{{ values.karma }}| -- Average note granted : {{ values.note }} / 10</br>{{ values.comment }}</br>
+                        {% if user.is_authenticated and user.isExpert and user.username != values.expertName %}
+                            <a href="{% url 'updateKarma' idProject=last_contributed_project.id idEvaluateur=user.id idEvalue=values.idExpert  note=1 %}">
+                                <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                            </a>
+                            <a href="{% url 'updateKarma' idProject=last_contributed_project.id idEvaluateur=user.id idEvalue=values.idExpert note=0 %}">
+                                <i class="fa fa-thumbs-down ml-3" aria-hidden="true"></i>
+                            </a>
+                        {% endif %}
+                    </li>
+
+                {% empty %}
+                <li class="list-group-item">No comments</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <!-- //project col -->
+
+        <hr class="clearfix w-100 d-md-none pb-3">
+
+        <!-- member col -->
+        <div class="col">
+            <h5 class="text-center">New members</h5>
+            <ul class="list-group" style="overflow: auto;height: 470px">
+                {% for user in users %}
+                <li class="list-group-item overflow-auto">
+                    {% if user.isExpert %}
+                        <span class="fa fa-get-pocket"> {{ user.username }}</span><a class="pull-right" href="{% url 'userId' id=user.id %}">See profile</a>
+                    {% else %}
+                        <span class="fa fa-user-circle"> {{ user.username }}</span><a class="pull-right" href="{% url 'userId' id=user.id %}">See profile</a>
+                    {% endif %}
+                </li>
+                {% empty %}
+                <li class="list-group-item">No one</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <!-- //member col -->
+    </div>
+</body>
+
+
+<!-- footer row -->
+<footer>
+    <div class="container pt-5 border-bottom">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-6 p-0 float-left mb-3 text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase"><a href="{% url 'accueil' %}">Home</a></h5>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 p-0 mb-3 float-left text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Company</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'contact' %}"></i>Contact us </a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 mb-3 p-0 float-left text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Connect</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="https://github.com/KylianViaux/SiteDjangoGreen" target="_blank"><i class="fa fa-github mr-1"></i> Github</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 mb-3 p-0 float-left text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Privacy & terms</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'mentionsLegales' %}">Legal mentions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="py-4 d-flex justify-content-center align-items-center">
+                <p class="mr-4 fa fa-copyright" > Designed by | Viaux Kylian - Marignale Ian</p>
+            </div>
+        </div>
+    </div>
+    </div>
+</footer>
+<!-- //footer row -->
+</html>

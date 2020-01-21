@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <title>Contact</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/javascript.util/0.12.12/javascript.util.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    {% load crispy_forms_tags %}
+    {% load bootstrap4 %}
+    {% load static %}
+    {% load mathfilters %}
+</head>
+
+<!-- header row -->
+<header>
+    <div class="row bg-light ml-3 mr-3 header">
+        <div class="col col-md-auto">
+            <img src="{% static 'images/logo.png' %}" height="100" class="d-inline-block align-middle mr-2">
+            <span class="text-uppercase font-weight-bold">MaKe Our Planet Great Again</span>
+        </div>
+        <div class="col"></div>
+        <div class="col col-md-auto">
+            {% if request.user.is_authenticated %}
+            <p>Welcome {{ request.user.username }}</p>
+            <div >
+                <p class="fa fa-plus-square-o"><a href="{% url 'nouveauProject' %}"> Create a new project</a></p></br>
+                <p class="fa fa-sign-out"><a href="{% url 'deconnexion' %}"> Sign out</a></p>
+            </div>
+            {% else %}
+            <p class="text-right"><a href="{% url 'accueil' %}">Sign in !</a></p>
+            <p class="text-right">No account yet ? <a href="{% url 'inscription' %}">Join Us !</a></p>
+            {% endif %}
+        </div>
+    </div>
+</header>
+<!-- //header row -->
+
+<body>
+    <div class="container">
+        <h1 class="text-center text-warning">Contact Us</h1>
+        <div class="form-container container">
+            <form role="form" action="" method="post">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <button class="form-button btn btn-success" type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+
+<!-- footer row -->
+<footer>
+    <div class="container pt-5 border-bottom">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 col-6 p-0 float-left mb-3 text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase"><a href="{% url 'accueil' %}">Home</a></h5>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 p-0 mb-3 float-left text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Company</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'contact' %}"></i>Contact us </a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 mb-3 p-0 float-left text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Connect</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="https://github.com/KylianViaux/SiteDjangoGreen" target="_blank"><i class="fa fa-github mr-1"></i> Github</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3 col-sm-6 col-6 mb-3 p-0 float-left text-center">
+                <h5 class="mb-4 font-weight-bold text-uppercase">Privacy & terms</h5>
+                <ul class="list-group">
+                    <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'mentionsLegales' %}">Legal mentions</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="py-4 d-flex justify-content-center align-items-center">
+                <p class="mr-4 fa fa-copyright" > Designed by | Viaux Kylian - Marignale Ian</p>
+            </div>
+        </div>
+    </div>
+    </div>
+</footer>
+<!-- //footer row -->
+
+</html>
+
+

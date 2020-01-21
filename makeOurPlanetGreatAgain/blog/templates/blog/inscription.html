@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <title>Inscription</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  {% load crispy_forms_tags %}
+  {% load bootstrap4 %}
+  {% load static %}
+</head>
+
+<!--  style="background-image: url({% static 'images/cover2.jpg' %}); background-repeat: no-repeat; background-size: cover" -->
+<body>
+  <div class="form-container container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class=" text-warning text-center">Inscription</h1>
+      </div>
+      <div class="col-md-12">
+
+          {% if submitted %}
+            <p class="success">
+               <p><a href="{% url 'accueil' %}">Inscription réussie, retour à l'acceuil</a></p>
+            </p>
+
+          {% else %}
+            <form method="post" enctype="multipart/form-data" novalidate>
+              {% csrf_token %}
+              {{ form|crispy }}
+              <div class="row">
+                <div class="col-12 text-center">
+                  <button type="submit" class="form-button btn btn-success">Submit</button>
+                  <p>(1) Un expert est une personne capable d'evaluer un projet</p>
+                </div>
+              </div>
+            </form>
+          {% endif %}
+         </div>
+      </div>
+  </div>
+</body>
+
+<!-- footer row -->
+<footer>
+  <div class="container pt-5 border-bottom">
+    <div class="row">
+      <div class="col-md-3 col-sm-6 col-6 p-0 float-left mb-3 text-center">
+        <h5 class="mb-4 font-weight-bold text-uppercase"><a href="{% url 'accueil' %}">Home</a></h5>
+      </div>
+      <div class="col-md-3 col-sm-6 col-6 p-0 mb-3 float-left text-center">
+        <h5 class="mb-4 font-weight-bold text-uppercase">Company</h5>
+        <ul class="list-group">
+          <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'contact' %}"></i>Contact us </a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 col-sm-6 col-6 mb-3 p-0 float-left text-center">
+        <h5 class="mb-4 font-weight-bold text-uppercase">Connect</h5>
+        <ul class="list-group">
+          <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="https://github.com/KylianViaux/SiteDjangoGreen" target="_blank"><i class="fa fa-github mr-1"></i> Github</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 col-sm-6 col-6 mb-3 p-0 float-left text-center">
+        <h5 class="mb-4 font-weight-bold text-uppercase">Privacy & terms</h5>
+        <ul class="list-group">
+          <li class="list-group-item bg-transparent border-0 p-0 mb-2"><a href="{% url 'mentionsLegales' %}">Legal mentions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="py-4 d-flex justify-content-center align-items-center">
+        <p class="mr-4 fa fa-copyright" > Designed by | Viaux Kylian - Marignale Ian</p>
+      </div>
+    </div>
+  </div>
+  </div>
+</footer>
+<!-- //footer row -->
+
+</html>
+
