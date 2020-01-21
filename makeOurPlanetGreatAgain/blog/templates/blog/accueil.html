@@ -116,7 +116,8 @@
             <ul class="list-group" style="overflow: auto;height: 280px">
                 {% for values in comments %}
                     <li class="list-group-item overflow-auto">
-                        {{ values.expertName }} |{{ values.karma }}| -- Average note granted : {{ values.note }} / 10</br>{{ values.comment }}</br>
+                        <a href="{% url 'userId' id=values.idExpert %}"> {{ values.expertName }}</a>
+                         |{{ values.karma }}| -- Average note granted : {{ values.note }} / 10</br>{{ values.comment }}</br>
                         {% if user.is_authenticated and user.isExpert and user.username != values.expertName %}
                             <a href="{% url 'updateKarma' idProject=last_contributed_project.id idEvaluateur=user.id idEvalue=values.idExpert  note=1 %}">
                                 <i class="fa fa-thumbs-up" aria-hidden="true"></i>
