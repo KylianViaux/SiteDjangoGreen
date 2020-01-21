@@ -91,7 +91,7 @@ CREATE TABLE `auth_permission` (
 
 LOCK TABLES `auth_permission` WRITE;
 /*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
-INSERT INTO `auth_permission` VALUES (1,'Can add log entry',1,'add_logentry'),(2,'Can change log entry',1,'change_logentry'),(3,'Can delete log entry',1,'delete_logentry'),(4,'Can view log entry',1,'view_logentry'),(5,'Can add permission',3,'add_permission'),(6,'Can change permission',3,'change_permission'),(7,'Can delete permission',3,'delete_permission'),(8,'Can view permission',3,'view_permission'),(9,'Can add group',2,'add_group'),(10,'Can change group',2,'change_group'),(11,'Can delete group',2,'delete_group'),(12,'Can view group',2,'view_group'),(13,'Can add content type',4,'add_contenttype'),(14,'Can change content type',4,'change_contenttype'),(15,'Can delete content type',4,'delete_contenttype'),(16,'Can view content type',4,'view_contenttype'),(17,'Can add session',5,'add_session'),(18,'Can change session',5,'change_session'),(19,'Can delete session',5,'delete_session'),(20,'Can view session',5,'view_session'),(21,'Can add investor link',8,'add_investorlink'),(22,'Can change investor link',8,'change_investorlink'),(23,'Can delete investor link',8,'delete_investorlink'),(24,'Can view investor link',8,'view_investorlink'),(25,'Can add expert note',9,'add_expertnote'),(26,'Can change expert note',9,'change_expertnote'),(27,'Can delete expert note',9,'delete_expertnote'),(28,'Can view expert note',9,'view_expertnote'),(29,'Can add Projet',10,'add_project'),(30,'Can change Projet',10,'change_project'),(31,'Can delete Projet',10,'delete_project'),(32,'Can view Projet',10,'view_project'),(33,'Evaluer un projet',10,'evaluate_project'),(34,'Can add karma check',7,'add_karmacheck'),(35,'Can change karma check',7,'change_karmacheck'),(36,'Can delete karma check',7,'delete_karmacheck'),(37,'Can view karma check',7,'view_karmacheck'),(38,'Can add Utilisateur',6,'add_user'),(39,'Can change Utilisateur',6,'change_user'),(40,'Can delete Utilisateur',6,'delete_user'),(41,'Can view Utilisateur',6,'view_user');
+INSERT INTO `auth_permission` VALUES (1,'Can add log entry',1,'add_logentry'),(2,'Can change log entry',1,'change_logentry'),(3,'Can delete log entry',1,'delete_logentry'),(4,'Can view log entry',1,'view_logentry'),(5,'Can add permission',3,'add_permission'),(6,'Can change permission',3,'change_permission'),(7,'Can delete permission',3,'delete_permission'),(8,'Can view permission',3,'view_permission'),(9,'Can add group',2,'add_group'),(10,'Can change group',2,'change_group'),(11,'Can delete group',2,'delete_group'),(12,'Can view group',2,'view_group'),(13,'Can add content type',4,'add_contenttype'),(14,'Can change content type',4,'change_contenttype'),(15,'Can delete content type',4,'delete_contenttype'),(16,'Can view content type',4,'view_contenttype'),(17,'Can add session',5,'add_session'),(18,'Can change session',5,'change_session'),(19,'Can delete session',5,'delete_session'),(20,'Can view session',5,'view_session'),(21,'Can add karma check',8,'add_karmacheck'),(22,'Can change karma check',8,'change_karmacheck'),(23,'Can delete karma check',8,'delete_karmacheck'),(24,'Can view karma check',8,'view_karmacheck'),(25,'Can add investor link',7,'add_investorlink'),(26,'Can change investor link',7,'change_investorlink'),(27,'Can delete investor link',7,'delete_investorlink'),(28,'Can view investor link',7,'view_investorlink'),(29,'Can add Projet',10,'add_project'),(30,'Can change Projet',10,'change_project'),(31,'Can delete Projet',10,'delete_project'),(32,'Can view Projet',10,'view_project'),(33,'Evaluer un projet',10,'evaluate_project'),(34,'Can add expert note',6,'add_expertnote'),(35,'Can change expert note',6,'change_expertnote'),(36,'Can delete expert note',6,'delete_expertnote'),(37,'Can view expert note',6,'view_expertnote'),(38,'Can add Utilisateur',9,'add_user'),(39,'Can change Utilisateur',9,'change_user'),(40,'Can delete Utilisateur',9,'delete_user'),(41,'Can view Utilisateur',9,'view_user');
 /*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -116,7 +116,7 @@ CREATE TABLE `blog_expertnote` (
   KEY `blog_expertnote_idProject_id_ba7ebaec_fk_blog_project_id` (`idProject_id`),
   CONSTRAINT `blog_expertnote_idExpert_id_cb8b46c8_fk_blog_user_id` FOREIGN KEY (`idExpert_id`) REFERENCES `blog_user` (`id`),
   CONSTRAINT `blog_expertnote_idProject_id_ba7ebaec_fk_blog_project_id` FOREIGN KEY (`idProject_id`) REFERENCES `blog_project` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,6 +125,7 @@ CREATE TABLE `blog_expertnote` (
 
 LOCK TABLES `blog_expertnote` WRITE;
 /*!40000 ALTER TABLE `blog_expertnote` DISABLE KEYS */;
+INSERT INTO `blog_expertnote` VALUES (1,0,0,0,0,'Projet irréalisable dans de telles conditions',4,3),(2,0,0,2,0,'Le projet est intéressant mais infaisable avec un tel budget',5,3),(3,7,8,9,8,'Projet très intéressant',6,2),(4,7,10,10,9,'Validé ',7,2);
 /*!40000 ALTER TABLE `blog_expertnote` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -147,7 +148,7 @@ CREATE TABLE `blog_investorlink` (
   KEY `blog_investorlink_idProject_id_bfe1f9c7_fk_blog_project_id` (`idProject_id`),
   CONSTRAINT `blog_investorlink_idInvestisseur_id_8b862354_fk_blog_user_id` FOREIGN KEY (`idInvestisseur_id`) REFERENCES `blog_user` (`id`),
   CONSTRAINT `blog_investorlink_idProject_id_bfe1f9c7_fk_blog_project_id` FOREIGN KEY (`idProject_id`) REFERENCES `blog_project` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,7 +157,7 @@ CREATE TABLE `blog_investorlink` (
 
 LOCK TABLES `blog_investorlink` WRITE;
 /*!40000 ALTER TABLE `blog_investorlink` DISABLE KEYS */;
-INSERT INTO `blog_investorlink` VALUES (1,25,25,'2020-01-17 19:26:12.785450',4,1);
+INSERT INTO `blog_investorlink` VALUES (1,50,50,'2020-01-21 09:40:27.077591',5,2),(2,25,25,'2020-01-21 09:41:40.636477',6,2),(3,10,10,'2020-01-21 09:42:31.705662',7,2),(4,100,50,'2020-01-21 09:42:44.906203',2,2),(5,35,10,'2020-01-21 09:43:13.253755',1,2);
 /*!40000 ALTER TABLE `blog_investorlink` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -213,7 +214,7 @@ CREATE TABLE `blog_project` (
   PRIMARY KEY (`id`),
   KEY `blog_project_idCreateur_id_9c2de545_fk_blog_user_id` (`idCreateur_id`),
   CONSTRAINT `blog_project_idCreateur_id_9c2de545_fk_blog_user_id` FOREIGN KEY (`idCreateur_id`) REFERENCES `blog_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -222,7 +223,7 @@ CREATE TABLE `blog_project` (
 
 LOCK TABLES `blog_project` WRITE;
 /*!40000 ALTER TABLE `blog_project` DISABLE KEYS */;
-INSERT INTO `blog_project` VALUES (1,'project1',1,25,1000,'','2020-01-17 19:25:33.609530','images/serveimage_cwsKNRL.jpeg',4);
+INSERT INTO `blog_project` VALUES (1,'Projet mystère',1,0,5000,'Projet pour m\'enrichir (partie I)','2020-01-21 08:59:08.086817','',1),(2,'Plantons des arbres',5,220,5000,'Planter des arbres partout dans le monde','2020-01-21 09:13:04.430371','images/projet2.png',2),(3,'Barrage',2,0,500,'Création d\'un barrage pour bloquer l\'eau de la rivière','2020-01-21 09:21:57.502771','',8),(4,'Foodtruck ecologique',2,0,10000,'Le foodtruck écologique pour Atlantide ','2020-01-21 09:29:21.325423','images/projet3.jpeg',3),(5,'El famoso ',1,0,10,'No description available','2020-01-21 09:48:18.360930','images/troll_nmXpA8M.jpeg',9);
 /*!40000 ALTER TABLE `blog_project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -251,7 +252,7 @@ CREATE TABLE `blog_user` (
   `karma` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -260,7 +261,7 @@ CREATE TABLE `blog_user` (
 
 LOCK TABLES `blog_user` WRITE;
 /*!40000 ALTER TABLE `blog_user` DISABLE KEYS */;
-INSERT INTO `blog_user` VALUES (1,'2020-01-17 20:10:10.893666',0,'','',0,1,'2020-01-17 19:06:01.706949','admin','pbkdf2_sha256$150000$z4sWaJTarxiR$ApSNiz1tTyVClf9/19bXcesgItAb80r97nc/URlfRUY=','admin@admin.com','','2020-01-17 19:06:01.706961',0,0),(2,'2020-01-17 20:08:29.763242',0,'','',0,1,'2020-01-17 19:13:52.615234','expert','pbkdf2_sha256$150000$IFfuisE2fmji$PE2nJEyW1hnFoeP6zDJoHyD52+/2lTW4XnHU1r9P/6g=','expert1@expert1.com','','2020-01-17 19:13:52.615247',1,110),(3,'2020-01-17 19:15:52.226817',0,'','',0,1,'2020-01-17 19:15:52.130430','expert2','pbkdf2_sha256$150000$CDBOl0p0IXqX$rXDfRWLxhoMu3aTiZEwQNG+Tg71YZ1xqup8dTYgckSU=','expert2@expert2.com','','2020-01-17 19:15:52.130443',1,110),(4,'2020-01-17 20:36:57.751126',0,'','',0,1,'2020-01-17 19:17:41.927338','test','pbkdf2_sha256$150000$LT1jolHZp87N$8oU+3uFfkiexLns0QpKfbRPX3dcn0QIDxJTTU6sd2fk=','test@test.Com','','2020-01-17 19:17:41.927356',1,110),(5,NULL,0,'','',0,1,'2020-01-17 20:36:07.968253','test2','pbkdf2_sha256$150000$pp7fbi5m4obc$iNtMlfyHsVCZRuYGpjT82lLuoynqxI3n+7blT/+M3AM=','test2@test2.com','','2020-01-17 20:36:07.968265',1,110);
+INSERT INTO `blog_user` VALUES (1,'2020-01-21 09:43:07.945326',1,'','',1,1,'2020-01-21 08:48:29.832579','admin','pbkdf2_sha256$150000$SIjzYa65CR2L$x7YCasfX7fSjDnBlU6ioyEoUmS/Ni8vFLdMxwEnpO54=','admin@minda.com','I\'m the law!','2020-01-21 08:48:29.832645',1,10000),(2,'2020-01-21 09:42:39.976745',0,'','',0,1,'2020-01-21 09:03:13.140249','uti','pbkdf2_sha256$150000$uJlwWFK3dUmU$sPe1GOy9Sof+ld8FYm2aPV8Vf6IbLFiKhov5IapbJqE=','uti@uti.com','Je suis un simple utilisateur','2020-01-21 09:03:13.140290',0,0),(3,'2020-01-21 09:35:47.947334',0,'','',0,1,'2020-01-21 09:03:55.936127','expert1','pbkdf2_sha256$150000$BzlEvQgHCNXA$FCN2/hz1L6Lu9u/pq2LGJot0gB6EnhsIJTSr3PMGaU4=','expert1@expert1.com','Compte expert de niveau 1','2020-01-21 09:03:55.936140',1,110),(4,'2020-01-21 09:36:27.986242',0,'','',0,1,'2020-01-21 09:04:19.370292','expert2','pbkdf2_sha256$150000$15azpPgzRe2H$blR1Z+9PwNz59Wb2cieBAHaF/OFHKPJG+oMLYotE/5c=','expert2@expert2.com','Compte expert de niveau 2','2020-01-21 09:04:19.370306',1,250),(5,'2020-01-21 09:45:54.685971',0,'','',0,1,'2020-01-21 09:04:43.285974','expert3','pbkdf2_sha256$150000$y5S2DhL5Eyvg$ljvYGtoCCTspH7iJhjMuW4q4BK0D3J0m00gYDuX6DtU=','expert3@expert3.com','Compte expert de niveau 3','2020-01-21 09:04:43.285987',1,350),(6,'2020-01-21 09:40:50.956556',0,'','',0,1,'2020-01-21 09:05:47.038776','expert5','pbkdf2_sha256$150000$8ecllgHi5Jm7$0KNFf9WB1xc+Fz7L7TdnZ1wu1YPUJH0GD0TcxX40/cE=','expert5@expert5.com','Compte expert de niveau 5','2020-01-21 09:05:47.038789',1,550),(7,'2020-01-21 09:41:54.908667',0,'','',0,1,'2020-01-21 09:06:30.011256','expert10','pbkdf2_sha256$150000$ygAd20nuuOYT$jBGRDmGAHBL1PJDl6o1V590b0SO9ead44xE2TJp1+S4=','expert10@expert10.com','Compte expert de niveau 10','2020-01-21 09:06:30.011269',1,1050),(8,'2020-01-21 09:20:25.426832',0,'','',0,1,'2020-01-21 09:07:49.742370','user','pbkdf2_sha256$150000$ZKIgMjs3f6ap$Utknqlaba8Xnx45LU/ngYyPYgyXRd045MlRr5j5jJ9g=','user@user.com','Compte utilisateur simple','2020-01-21 09:07:49.742385',0,0),(9,'2020-01-21 09:47:20.211101',0,'','',0,1,'2020-01-21 09:47:14.349013','troll','pbkdf2_sha256$150000$15W2XDsUSUc5$XmeAg1Bom/KMZD7iY03qnEEDQdPkal3QevOhrRb/aTQ=','troll@troll.com','','2020-01-21 09:47:14.349026',0,0);
 /*!40000 ALTER TABLE `blog_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -375,7 +376,7 @@ CREATE TABLE `django_content_type` (
 
 LOCK TABLES `django_content_type` WRITE;
 /*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
-INSERT INTO `django_content_type` VALUES (1,'admin','logentry'),(2,'auth','group'),(3,'auth','permission'),(9,'blog','expertnote'),(8,'blog','investorlink'),(7,'blog','karmacheck'),(10,'blog','project'),(6,'blog','user'),(4,'contenttypes','contenttype'),(5,'sessions','session');
+INSERT INTO `django_content_type` VALUES (1,'admin','logentry'),(2,'auth','group'),(3,'auth','permission'),(6,'blog','expertnote'),(7,'blog','investorlink'),(8,'blog','karmacheck'),(10,'blog','project'),(9,'blog','user'),(4,'contenttypes','contenttype'),(5,'sessions','session');
 /*!40000 ALTER TABLE `django_content_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -392,7 +393,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -401,7 +402,7 @@ CREATE TABLE `django_migrations` (
 
 LOCK TABLES `django_migrations` WRITE;
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
-INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2020-01-17 18:59:52.321436'),(2,'contenttypes','0002_remove_content_type_name','2020-01-17 18:59:52.368069'),(3,'auth','0001_initial','2020-01-17 18:59:52.456605'),(4,'auth','0002_alter_permission_name_max_length','2020-01-17 18:59:52.607340'),(5,'auth','0003_alter_user_email_max_length','2020-01-17 18:59:52.627400'),(6,'auth','0004_alter_user_username_opts','2020-01-17 18:59:52.640428'),(7,'auth','0005_alter_user_last_login_null','2020-01-17 18:59:52.648319'),(8,'auth','0006_require_contenttypes_0002','2020-01-17 18:59:52.650560'),(9,'auth','0007_alter_validators_add_error_messages','2020-01-17 18:59:52.657162'),(10,'auth','0008_alter_user_username_max_length','2020-01-17 18:59:52.662737'),(11,'auth','0009_alter_user_last_name_max_length','2020-01-17 18:59:52.667605'),(12,'auth','0010_alter_group_name_max_length','2020-01-17 18:59:52.674819'),(13,'auth','0011_update_proxy_permissions','2020-01-17 18:59:52.679069'),(14,'blog','0001_initial','2020-01-17 18:59:53.017994'),(15,'admin','0001_initial','2020-01-17 18:59:53.573394'),(16,'admin','0002_logentry_remove_auto_add','2020-01-17 18:59:53.672187'),(17,'admin','0003_logentry_add_action_flag_choices','2020-01-17 18:59:53.689094'),(18,'blog','0002_auto_20200117_1344','2020-01-17 18:59:53.721165'),(19,'blog','0003_auto_20200117_1353','2020-01-17 18:59:53.760560'),(20,'sessions','0001_initial','2020-01-17 18:59:53.787676');
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2020-01-21 08:44:21.020552'),(2,'contenttypes','0002_remove_content_type_name','2020-01-21 08:44:21.091051'),(3,'auth','0001_initial','2020-01-21 08:44:21.184000'),(4,'auth','0002_alter_permission_name_max_length','2020-01-21 08:44:21.341348'),(5,'auth','0003_alter_user_email_max_length','2020-01-21 08:44:21.356489'),(6,'auth','0004_alter_user_username_opts','2020-01-21 08:44:21.371655'),(7,'auth','0005_alter_user_last_login_null','2020-01-21 08:44:21.381434'),(8,'auth','0006_require_contenttypes_0002','2020-01-21 08:44:21.383949'),(9,'auth','0007_alter_validators_add_error_messages','2020-01-21 08:44:21.391832'),(10,'auth','0008_alter_user_username_max_length','2020-01-21 08:44:21.397824'),(11,'auth','0009_alter_user_last_name_max_length','2020-01-21 08:44:21.402834'),(12,'auth','0010_alter_group_name_max_length','2020-01-21 08:44:21.411657'),(13,'auth','0011_update_proxy_permissions','2020-01-21 08:44:21.430336'),(14,'blog','0001_initial','2020-01-21 08:44:21.686892'),(15,'admin','0001_initial','2020-01-21 08:44:22.249886'),(16,'admin','0002_logentry_remove_auto_add','2020-01-21 08:44:22.360151'),(17,'admin','0003_logentry_add_action_flag_choices','2020-01-21 08:44:22.380574'),(18,'sessions','0001_initial','2020-01-21 08:44:22.403278');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -427,7 +428,6 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('s4fjghhpeq55bbf0kib71a57f1y15sdg','MmM0YzgyZTgyY2M0NjI0Mjc5NGJkZjdjZmQ2ZjhmMzU2MzA5NzhkNDp7Il9hdXRoX3VzZXJfaWQiOiI0IiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI0NmZlYTlhNGQ5YWQxMDc3N2FmMDhmNmM4ODJhMzc1Y2NlNDlkMWEzIn0=','2020-01-31 20:36:57.763224');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -440,4 +440,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-17 23:03:14
+-- Dump completed on 2020-01-21 10:51:18

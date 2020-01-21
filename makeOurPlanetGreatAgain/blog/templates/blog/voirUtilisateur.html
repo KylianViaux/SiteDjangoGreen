@@ -64,7 +64,7 @@
             <div class="col text-right">
                 <h5>Project created by this user</h5>
                 {% for values in projects %}
-                    <p><a class="text-warning" href="{% url 'projectId' id=values.id %}">{{ values.nom }}</a>{{ values.description }}</p>
+                    <p><a class="text-warning" href="{% url 'projectId' id=values.id %}">{{ values.nom }}</a></p>
                 {% empty %}
                     <p>this user hasn't create any project yet</p>
                 {% endfor %}
